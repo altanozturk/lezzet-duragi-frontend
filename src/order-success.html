@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sipariş Başarılı - Lezzet Durağı</title>
+    <link href="output.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="scripts/navbar.js"></script>
+</head>
+
+<body class="bg-slate-900 text-gray-100">
+    <div id="navbar-placeholder"></div>
+
+    <!-- Ana içeriği başlangıçta gizli tut -->
+    <div id="success-content" class="hidden min-h-screen flex items-center justify-center py-12 px-4">
+        <div class="text-center">
+            <div class="mb-8">
+                <i class="fas fa-check-circle text-green-500 text-7xl mb-4"></i>
+                <h1 class="text-4xl font-bold mb-4">Siparişiniz Alındı!</h1>
+                <p class="text-xl text-gray-400 mb-8">Siparişiniz başarıyla oluşturuldu.</p>
+            </div>
+
+            <div class="bg-slate-800 rounded-lg p-6 mb-8 max-w-md mx-auto">
+                <p class="text-gray-300 mb-4">
+                    Siparişiniz en kısa sürede hazırlanıp adresinize teslim edilecektir.
+                </p>
+                <p class="text-gray-300">
+                    Bizi tercih ettiğiniz için teşekkür ederiz!
+                </p>
+            </div>
+
+            <div class="space-x-4">
+                <a href="/src/menu.html"
+                    class="inline-block bg-yellow-500 text-white px-6 py-3 rounded-lg hover:bg-yellow-600 transition duration-200">
+                    Menüye Dön
+                </a>
+                <a href="/src/index.html"
+                    class="inline-block bg-slate-700 text-white px-6 py-3 rounded-lg hover:bg-slate-600 transition duration-200">
+                    Ana Sayfa
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer-placeholder"></div>
+
+    <script>
+        // Sayfa yüklenmeden önce kontrol yap
+        const token = localStorage.getItem('token');
+        const orderCompleted = sessionStorage.getItem('orderCompleted');
+
+        if (!token || !orderCompleted) {
+            window.location.href = '/src/index.html';
+        } else {
+            // Kontroller başarılıysa içeriği göster
+            document.getElementById('success-content').classList.remove('hidden');
+            sessionStorage.removeItem('orderCompleted');
+
+            document.addEventListener('DOMContentLoaded', function () {
+                updateNavbar();
+            });
+
+            $('#footer-placeholder').load('footer.html');
+        }
+    </script>
+</body>
+
+</html>
