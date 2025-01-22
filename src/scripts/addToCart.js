@@ -18,13 +18,13 @@ function handleTokenExpiration() {
     localStorage.removeItem('token');
     localStorage.removeItem('tokenExpiration');
     localStorage.removeItem('username');
-    window.location.href = '/src/login.html';
+    window.location.href = '/login.html';
 }
 
 function addToCart(productId, productName, price, imageUrl) {
     const token = localStorage.getItem('token');
     if (!token || !isTokenValid()) {
-        window.location.href = '/src/login.html';
+        window.location.href = '/login.html';
         return;
     }
 

@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Token kontrolü
     const token = localStorage.getItem('token');
     if (!token) {
-        window.location.href = '/src/login.html';
+        window.location.href = '/login.html';
         return;
     }
 
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         });
         
         if (!response.data.isAdmin) {
-            window.location.href = '/src/index.html';
+            window.location.href = '/index.html';
             return;
         }
         
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         
     } catch (error) {
         console.error('Error checking admin status:', error);
-        window.location.href = '/src/login.html';
+        window.location.href = '/login.html';
     }
 });
 

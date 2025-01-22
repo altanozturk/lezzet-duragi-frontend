@@ -2,11 +2,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Eğer login sayfasında değilsek ve token yoksa login'e yönlendir
     if (!window.location.pathname.includes('login.html') && !checkAuthStatus()) {
-        window.location.href = '/src/login.html';
+        window.location.href = '/login.html';
     }
     // Eğer login sayfasındaysak ve geçerli token varsa ana sayfaya yönlendir
     else if (window.location.pathname.includes('login.html') && checkAuthStatus()) {
-        window.location.href = '/src/index.html';
+        window.location.href = '/index.html';
     }
 });
 
@@ -47,7 +47,7 @@ function login(event) {
         localStorage.setItem('tokenExpiration', expirationTime);
 
         // Ana sayfaya yönlendir
-        window.location.href = '/src/index.html';
+        window.location.href = '/index.html';
     })
     .catch(error => {
         if (error.response) {
@@ -137,7 +137,7 @@ function handleTokenExpiration() {
     localStorage.removeItem('token');
     localStorage.removeItem('tokenExpiration');
     localStorage.removeItem('username');
-    window.location.href = '/src/login.html';
+    window.location.href = '/login.html';
 }
 
 // Yardımcı fonksiyonlar
