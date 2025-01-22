@@ -100,6 +100,7 @@
     <script type="module">
         import { updateNavbar } from './scripts/navbar.js';
         import { loadFooter } from './scripts/footer.js';
+        import { login, register } from './scripts/auth.js';
 
         document.addEventListener('DOMContentLoaded', function () {
             updateNavbar();
@@ -116,6 +117,10 @@
             document.getElementById('registerForm').classList.add('hidden');
             document.getElementById('loginForm').classList.remove('hidden');
         }
+
+        // Auth fonksiyonlarını global scope'a ekle
+        window.login = login;
+        window.register = register;
     </script>
 </body>
 

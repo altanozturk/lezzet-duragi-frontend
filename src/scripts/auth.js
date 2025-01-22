@@ -1,3 +1,5 @@
+const API_URL = 'https://lezzet-duragi-backend-production.up.railway.app/api';
+
 // Sayfa yüklendiğinde çağrılacak ana fonksiyon
 document.addEventListener('DOMContentLoaded', () => {
     // Eğer login sayfasında değilsek ve token yoksa login'e yönlendir
@@ -21,50 +23,31 @@ function checkAuthStatus() {
 }
 
 // Login işlemi
-function login(event) {
+export async function login(event) {
     event.preventDefault();
     
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
 
-    // Validasyon
-    if (!username || !password) {
-        showError('Lütfen tüm alanları doldurun');
-        return;
-    }
+    try {
+        const response = await axios.post(`${API_URL}/auth/login`, {
+            username: username,
+            password: password
+        });
 
-    axios.post('http://localhost:8080/api/user/login', {
-        username: username,
-        password: password
-    })
-    .then(response => {
-        const token = response.data;
+        const { token } = response.data;
         localStorage.setItem('token', token);
         localStorage.setItem('username', username);
-        
-        // Token'ın süresini ayarla (24 saat)
-        const expirationTime = new Date().getTime() + 24 * 60 * 60 * 1000;
-        localStorage.setItem('tokenExpiration', expirationTime);
 
-        // Ana sayfaya yönlendir
         window.location.href = '/index.html';
-    })
-    .catch(error => {
-        if (error.response) {
-            if (error.response.status === 401) {
-                showError('Geçersiz kullanıcı adı veya şifre');
-            } else {
-                showError('Giriş sırasında bir hata oluştu: ' + error.response.data);
-            }
-        } else {
-            showError('Giriş sırasında bir hata oluştu');
-        }
+    } catch (error) {
         console.error('Login error:', error);
-    });
+        alert('Giriş başarısız: ' + (error.response?.data?.message || 'Bir hata oluştu'));
+    }
 }
 
 // Register işlemi
-function register(event) {
+export async function register(event) {
     event.preventDefault();
     
     const username = document.getElementById('reg-username').value;
@@ -72,52 +55,24 @@ function register(event) {
     const password = document.getElementById('reg-password').value;
     const confirmPassword = document.getElementById('reg-confirm-password').value;
 
-    // Validasyonlar
-    if (!username || !email || !password || !confirmPassword) {
-        showError('Lütfen tüm alanları doldurun');
-        return;
-    }
-
     if (password !== confirmPassword) {
-        showError('Şifreler eşleşmiyor');
+        alert('Şifreler eşleşmiyor!');
         return;
     }
 
-    // Email formatı kontrolü
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        showError('Geçerli bir email adresi girin');
-        return;
-    }
+    try {
+        const response = await axios.post(`${API_URL}/auth/register`, {
+            username: username,
+            email: email,
+            password: password
+        });
 
-    axios.post('http://localhost:8080/api/user/register', {
-        username: username,
-        email: email,
-        password: password
-    })
-    .then(response => {
-        const successMessage = document.getElementById('success-message');
-        successMessage.textContent = 'Kayıt başarılı! Giriş yapabilirsiniz.';
-        successMessage.classList.remove('hidden');
-        showLoginForm();
-        
-        // 3 saniye sonra mesajı gizle
-        setTimeout(() => {
-            successMessage.classList.add('hidden');
-        }, 3000);
-    })
-    .catch(error => {
-        if (error.response) {
-            if (error.response.status === 409) {
-                showError('Bu kullanıcı adı veya email zaten kullanımda');
-            } else {
-                showError('Kayıt sırasında bir hata oluştu: ' + error.response.data.message);
-            }
-        } else {
-            showError('Kayıt sırasında bir hata oluştu');
-        }
-        console.error('Registration error:', error);
-    });
+        alert('Kayıt başarılı! Lütfen giriş yapın.');
+        window.showLoginForm();
+    } catch (error) {
+        console.error('Register error:', error);
+        alert('Kayıt başarısız: ' + (error.response?.data?.message || 'Bir hata oluştu'));
+    }
 }
 
 // Token yönetimi fonksiyonları
