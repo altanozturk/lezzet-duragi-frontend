@@ -1,4 +1,4 @@
-const API_URL = import.meta.env?.VITE_API_URL || 'http://localhost:8080/api';
+const API_URL = 'https://lezzet-duragi-backend-production.up.railway.app/api';
 
 export function loadMenuItems(category = 'all') {
     const container = document.getElementById('menu-items');
@@ -10,7 +10,7 @@ export function loadMenuItems(category = 'all') {
             products.forEach(item => {
                 const itemHtml = `
                     <div class="bg-slate-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition duration-300">
-                        <img src="http://localhost:8080${item.imageUrl}" alt="${item.name}" class="w-full h-48 object-cover">
+                        <img src="https://lezzet-duragi-backend-production.up.railway.app${item.imageUrl}" alt="${item.name}" class="w-full h-48 object-cover">
                         <div class="p-6">
                             <h3 class="text-xl font-semibold mb-2">${item.name}</h3>
                             <p class="text-gray-400 mb-4">${item.description}</p>
