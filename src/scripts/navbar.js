@@ -1,3 +1,5 @@
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
+
 async function updateNavbar() {
     const token = localStorage.getItem("token");
     const username = localStorage.getItem("username");
@@ -11,7 +13,7 @@ async function updateNavbar() {
 
     // Admin kontrolü
     try {
-        const adminResponse = await axios.get('http://localhost:8080/api/user/check-admin', {
+        const adminResponse = await axios.get(`${API_URL}/user/check-admin`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -125,7 +127,7 @@ function updateCartCount() {
     const token = localStorage.getItem('token');
     if (!token) return;
 
-    axios.get('http://localhost:8080/api/cart/count', {
+    axios.get(`${API_URL}/cart/count`, {
         headers: {
             'Authorization': 'Bearer ' + token
         }
