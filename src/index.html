@@ -12,16 +12,12 @@
   <script type="module">
     import { updateNavbar } from './scripts/navbar.js';
     import { loadPopularItems } from './scripts/popularItems.js';
+    import { loadFooter } from './scripts/footer.js';
     
     document.addEventListener('DOMContentLoaded', function() {
       updateNavbar();
       loadPopularItems();
-      // Footer'ı yükle
-      fetch('./components/footer.html')
-        .then(response => response.text())
-        .then(data => {
-          document.getElementById('footer-placeholder').innerHTML = data;
-        });
+      loadFooter();
     });
   </script>
 </head>
