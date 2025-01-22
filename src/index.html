@@ -16,7 +16,7 @@
       updateNavbar();
       loadPopularItems();
       // Footer yolunu güncelle
-      fetch('./components/footer.html')  // './components/' olarak değişti
+      fetch('./components/footer.html')
         .then(response => response.text())
         .then(data => {
           document.getElementById('footer-placeholder').innerHTML = data;
@@ -31,7 +31,7 @@
   <!-- Hero Section -->
   <div class="relative h-[600px]">
     <div class="absolute inset-0">
-      <img src="img/menu_4.jpg" class="w-full h-full object-cover" alt="Restaurant">
+      <img src="./img/menu_4.jpg" class="w-full h-full object-cover" alt="Restaurant">
       <div class="absolute inset-0 bg-gradient-to-b from-slate-900/80 to-slate-900/40"></div>
     </div>
     <div class="relative container mx-auto px-4 h-full flex items-center">
@@ -109,7 +109,7 @@
           </a>
         </div>
         <div class="w-full md:w-1/2">
-          <img src="img/menu_4.jpg" alt="Special Offer" class="rounded-lg shadow-2xl">
+          <img src="./img/menu_4.jpg" alt="Special Offer" class="rounded-lg shadow-2xl">
         </div>
       </div>
     </div>
@@ -161,19 +161,19 @@
       const popularItems = [
         {
           name: 'Tavuk Döner',
-          image: 'img/menu_1.jpg',
+          image: './img/menu_1.jpg',
           price: '129.99',
           description: 'Özel soslu tavuk döner'
         },
         {
           name: 'Patso',
-          image: 'img/menu_2.jpg',
+          image: './img/menu_2.jpg',
           price: '99.99',
           description: 'Bol malzemeli patso'
         },
         {
           name: 'Pizza',
-          image: 'img/menu_4.jpg',
+          image: './img/menu_4.jpg',
           price: '189.99',
           description: 'Karışık pizza'
         }
