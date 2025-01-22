@@ -9,7 +9,20 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <script type="module" src="/scripts/navbar.js"></script>
+  <script type="module">
+    import { updateNavbar } from '/scripts/navbar.js';
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      updateNavbar();
+      loadPopularItems();
+      // Footer'ı yükle
+      fetch('/components/footer.html')
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById('footer-placeholder').innerHTML = data;
+        });
+    });
+  </script>
 </head>
 
 <body class="bg-slate-900 text-gray-100">
@@ -32,10 +45,10 @@
           <a href="/src/about.html" class="bg-slate-800 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-slate-700 transition">
             Hakkımızda
           </a>
-              </div>
-            </div>
-          </div>
         </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Features Section -->
   <div class="py-16 bg-slate-800">
@@ -63,8 +76,8 @@
           <p class="text-gray-400">Müşteri memnuniyeti odaklı</p>
         </div>
       </div>
-              </div>
-                </div>
+    </div>
+  </div>
 
   <!-- Popular Items Section -->
   <div class="py-16 bg-slate-900">
@@ -75,14 +88,14 @@
       </div>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8" id="popular-items">
         <!-- Popüler ürünler buraya gelecek -->
-              </div>
+      </div>
       <div class="text-center mt-12">
         <a href="/src/menu.html" class="inline-block bg-yellow-500 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-yellow-600 transition shadow-lg shadow-yellow-500/20">
           Tüm Menüyü Gör
-            </a>
-          </div>
-              </div>
-                </div>
+        </a>
+      </div>
+    </div>
+  </div>
 
   <!-- Special Offer Section -->
   <div class="py-16 bg-slate-800 relative overflow-hidden">
@@ -93,15 +106,15 @@
           <p class="text-gray-300 mb-6">2 pizza alana 1 pizza bedava! Bu fırsatı kaçırmayın.</p>
           <a href="/src/menu.html" class="inline-block bg-yellow-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-yellow-600 transition shadow-lg shadow-yellow-500/20">
             Hemen Sipariş Ver
-            </a>
-          </div>
+          </a>
+        </div>
         <div class="w-full md:w-1/2">
           <img src="img/menu_4.jpg" alt="Special Offer" class="rounded-lg shadow-2xl">
         </div>
-              </div>
-                </div>
+      </div>
+    </div>
     <div class="absolute -right-20 -bottom-20 w-64 h-64 bg-yellow-500/10 rounded-full blur-3xl"></div>
-              </div>
+  </div>
 
   <!-- Contact Section -->
   <div class="py-16 bg-slate-900">
@@ -144,17 +157,6 @@
   <div id="footer-placeholder"></div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      updateNavbar();
-      loadPopularItems();
-      // Footer'ı yükle
-      fetch('/components/footer.html')
-        .then(response => response.text())
-        .then(data => {
-          document.getElementById('footer-placeholder').innerHTML = data;
-        });
-    });
-
     function loadPopularItems() {
       const popularItems = [
         {

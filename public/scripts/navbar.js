@@ -1,6 +1,8 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
+// Environment variables'ı import et
+const API_URL = import.meta.env?.VITE_API_URL || 'http://localhost:8080/api';
 
-async function updateNavbar() {
+// Fonksiyonları export et
+export async function updateNavbar() {
     const token = localStorage.getItem("token");
     const username = localStorage.getItem("username");
     const navbarPlaceholder = document.getElementById("navbar-placeholder");
@@ -23,6 +25,58 @@ async function updateNavbar() {
     } catch (error) {
         console.error('Error checking admin status:', error);
         renderNavbar(username, false);
+    }
+}
+
+export function logout() {
+    // Tüm auth verilerini temizle
+    localStorage.removeItem("token");
+    localStorage.removeItem("tokenExpiration");
+    localStorage.removeItem("username");
+    
+    // Navbar'ı güncelle
+    updateNavbar();
+    
+    // Ana sayfaya yönlendir
+    window.location.href = "/src/index.html";
+}
+
+export function updateCartCount() {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    axios.get(`${API_URL}/cart/count`, {
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    })
+    .then(response => {
+        const cartCount = response.data;
+        const cartCountElement = document.getElementById('cart-count');
+        if (cartCountElement) {
+            cartCountElement.textContent = cartCount;
+            cartCountElement.style.display = cartCount > 0 ? 'block' : 'none';
+        }
+    })
+    .catch(error => {
+        console.error('Error fetching cart count:', error);
+    });
+}
+
+// Yardımcı fonksiyonlar
+function isTokenValid() {
+    const token = localStorage.getItem("token");
+    if (!token) return false;
+
+    try {
+        // Token'ı decode et
+        const tokenData = JSON.parse(atob(token.split('.')[1]));
+        const expirationTime = tokenData.exp * 1000;
+        const currentTime = new Date().getTime();
+
+        return currentTime < expirationTime;
+    } catch (error) {
+        return false;
     }
 }
 
@@ -94,58 +148,8 @@ function renderNavbar(username = null, isAdmin = false) {
     `;
 }
 
-function isTokenValid() {
-    const token = localStorage.getItem("token");
-    if (!token) return false;
-
-    try {
-        // Token'ı decode et
-        const tokenData = JSON.parse(atob(token.split('.')[1]));
-        const expirationTime = tokenData.exp * 1000;
-        const currentTime = new Date().getTime();
-
-        return currentTime < expirationTime;
-    } catch (error) {
-        return false;
-    }
-}
-
-function logout() {
-    // Tüm auth verilerini temizle
-    localStorage.removeItem("token");
-    localStorage.removeItem("tokenExpiration");
-    localStorage.removeItem("username");
-    
-    // Navbar'ı güncelle
-    updateNavbar();
-    
-    // Ana sayfaya yönlendir
-    window.location.href = "/src/index.html";
-}
-
-function updateCartCount() {
-    const token = localStorage.getItem('token');
-    if (!token) return;
-
-    axios.get(`${API_URL}/cart/count`, {
-        headers: {
-            'Authorization': 'Bearer ' + token
-        }
-    })
-    .then(response => {
-        const cartCount = response.data;
-        const cartCountElement = document.getElementById('cart-count');
-        if (cartCountElement) {
-            cartCountElement.textContent = cartCount;
-            cartCountElement.style.display = cartCount > 0 ? 'block' : 'none';
-        }
-    })
-    .catch(error => {
-        console.error('Error fetching cart count:', error);
-    });
-}
-
-// Navbar yüklendiğinde sepet sayısını güncelle
+// Otomatik başlatma
 document.addEventListener('DOMContentLoaded', () => {
+    updateNavbar();
     updateCartCount();
 });
