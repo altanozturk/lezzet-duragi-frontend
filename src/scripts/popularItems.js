@@ -2,19 +2,19 @@ export function loadPopularItems() {
   const popularItems = [
     {
       name: 'Tavuk Döner',
-      image: '../img/menu_1.jpg',  // Bir üst dizine çık
+      image: './img/menu_1.jpg',  // ./img/ şeklinde değişti
       price: '129.99',
       description: 'Özel soslu tavuk döner'
     },
     {
       name: 'Patso',
-      image: '../img/menu_2.jpg',  // Bir üst dizine çık
+      image: './img/menu_2.jpg',  // ./img/ şeklinde değişti
       price: '99.99',
       description: 'Bol malzemeli patso'
     },
     {
       name: 'Pizza',
-      image: '../img/menu_4.jpg',  // Bir üst dizine çık
+      image: './img/menu_4.jpg',  // ./img/ şeklinde değişti
       price: '189.99',
       description: 'Karışık pizza'
     }
