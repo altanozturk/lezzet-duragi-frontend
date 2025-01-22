@@ -1,20 +1,24 @@
+import menu1 from '../img/menu_1.jpg';
+import menu2 from '../img/menu_2.jpg';
+import menu4 from '../img/menu_4.jpg';
+
 export function loadPopularItems() {
   const popularItems = [
     {
       name: 'Tavuk Döner',
-      image: './img/menu_1.jpg',  // ./img/ şeklinde değişti
+      image: menu1,
       price: '129.99',
       description: 'Özel soslu tavuk döner'
     },
     {
       name: 'Patso',
-      image: './img/menu_2.jpg',  // ./img/ şeklinde değişti
+      image: menu2,
       price: '99.99',
       description: 'Bol malzemeli patso'
     },
     {
       name: 'Pizza',
-      image: './img/menu_4.jpg',  // ./img/ şeklinde değişti
+      image: menu4,
       price: '189.99',
       description: 'Karışık pizza'
     }
