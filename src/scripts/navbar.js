@@ -38,7 +38,7 @@ export function logout() {
     updateNavbar();
     
     // Ana sayfaya yönlendir
-    window.location.href = "/src/index.html";
+    window.location.href = "/index.html";
 }
 
 export function updateCartCount() {
