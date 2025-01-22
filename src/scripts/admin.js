@@ -1,3 +1,5 @@
+const API_URL = import.meta.env.VITE_API_URL;
+
 document.addEventListener('DOMContentLoaded', async function() {
     // Token kontrolü
     const token = localStorage.getItem('token');
@@ -8,7 +10,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     // Admin kontrolü
     try {
-        const response = await axios.get('http://localhost:8080/api/user/check-admin', {
+        const response = await axios.get(`${API_URL}/user/check-admin`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -45,7 +47,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
 async function loadProducts() {
     try {
-        const response = await axios.get('http://localhost:8080/api/products');
+        const response = await axios.get(`${API_URL}/products`);
         const products = response.data;
         displayProducts(products);
     } catch (error) {
@@ -174,7 +176,7 @@ async function handleSubmit(e) {
             description
         };
 
-        await axios.post('http://localhost:8080/api/products/admin/add', product, {
+        await axios.post(`${API_URL}/products/admin/add`, product, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
@@ -213,7 +215,7 @@ async function deleteProduct(id) {
     if (!confirm('Bu ürünü silmek istediğinizden emin misiniz?')) return;
     
     try {
-        const response = await axios.delete(`http://localhost:8080/api/products/admin/delete/${id}`, {
+        const response = await axios.delete(`${API_URL}/products/admin/delete/${id}`, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
@@ -252,7 +254,7 @@ function showTab(tabName) {
 // Siparişleri yükle
 async function loadOrders() {
     try {
-        const response = await axios.get('http://localhost:8080/api/orders/admin/all', {
+        const response = await axios.get(`${API_URL}/orders/admin/all`, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
@@ -302,7 +304,7 @@ function displayOrders(orders) {
 // Sipariş detaylarını göster
 async function showOrderDetails(orderId) {
     try {
-        const response = await axios.get(`http://localhost:8080/api/orders/admin/detail/${orderId}`, {
+        const response = await axios.get(`${API_URL}/orders/admin/detail/${orderId}`, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
