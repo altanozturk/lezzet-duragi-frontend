@@ -1,3 +1,5 @@
+const API_URL = 'https://lezzet-duragi-backend-production.up.railway.app/api';
+
 // auth.js'den gerekli fonksiyonları import et
 function isTokenValid() {
     const token = localStorage.getItem("token");
@@ -38,7 +40,7 @@ function addToCart(productId, productName, price, imageUrl) {
         imageUrl: imageUrl
     };
 
-    axios.post('http://localhost:8080/api/cart/add', cartItem, {
+    axios.post(`${API_URL}/cart/add`, cartItem, {
         headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + token
@@ -67,7 +69,7 @@ function updateCartCount() {
     console.log('Token:', token); // Token'ı kontrol edelim
 
     // Önce endpoint'i test edelim
-    fetch('http://localhost:8080/api/cart/count', {
+    fetch(`${API_URL}/cart/count`, {
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + token
@@ -83,7 +85,7 @@ function updateCartCount() {
     .catch(error => console.error('Fetch error:', error));
 
     // Mevcut axios çağrısı
-    axios.get('http://localhost:8080/api/cart/count', {
+    axios.get(`${API_URL}/cart/count`, {
         headers: {
             'Authorization': 'Bearer ' + token
         }

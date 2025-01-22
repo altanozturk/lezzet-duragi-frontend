@@ -55,21 +55,23 @@
 
     <div id="footer-placeholder"></div>
 
-    <script>
+    <script type="module">
+        import { updateNavbar } from './scripts/navbar.js';
+        import { loadFooter } from './scripts/footer.js';
+        
+        const API_URL = 'https://lezzet-duragi-backend-production.up.railway.app/api';
+        
         // Sayfa yüklenmeden önce token kontrolü
         const token = localStorage.getItem('token');
         if (!token) {
-            window.location.href = '/src/login.html';
+            window.location.href = '/login.html';  // /src/ kaldırıldı
         }
 
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             updateNavbar();
+            loadFooter();
+            loadCartItems();
         });
-
-        $('#footer-placeholder').load('footer.html');
-
-        // Sayfa yüklendiğinde sepeti yükle
-        document.addEventListener('DOMContentLoaded', loadCartItems);
 
         function updateCartUI(cartItems) {
             const cartContainer = document.getElementById('cartItems');
@@ -99,7 +101,7 @@
                 total += item.quantity * item.priceAtAddition;
                 const itemHtml = `
                     <div class="flex items-center py-4 border-b border-slate-700">
-                        <img src="http://localhost:8080${item.product.imageUrl}" alt="${item.product.name}" 
+                        <img src="https://lezzet-duragi-backend-production.up.railway.app${item.product.imageUrl}" alt="${item.product.name}" 
                             class="w-20 h-20 object-cover rounded-lg">
                         <div class="ml-4 flex-grow">
                             <h3 class="text-lg font-semibold">${item.product.name}</h3>
@@ -138,57 +140,56 @@
             const token = localStorage.getItem('token');
             if (!token) return;
 
-            axios.get('http://localhost:8080/api/cart/items', {
+            axios.get(`${API_URL}/cart/items`, {  // API_URL kullan
                 headers: {
                     'Authorization': 'Bearer ' + token
                 }
             })
-                .then(response => {
-                    const cartItems = response.data;
-                    updateCartUI(cartItems);
-                    updateCartCount(); // Her sepet yüklemesinde sayıyı güncelle
-                })
-                .catch(error => {
-                    console.error('Error loading cart items:', error);
-                    if (error.response && error.response.status === 401) {
-                        window.location.href = '/src/login.html';
-                    }
-                });
+            .then(response => {
+                const cartItems = response.data;
+                updateCartUI(cartItems);
+                updateCartCount();
+            })
+            .catch(error => {
+                console.error('Error loading cart items:', error);
+                if (error.response && error.response.status === 401) {
+                    window.location.href = '/login.html';  // /src/ kaldırıldı
+                }
+            });
         }
 
         function removeFromCart(itemId) {
             const token = localStorage.getItem('token');
             if (!token) return;
 
-            axios.delete(`http://localhost:8080/api/cart/remove/${itemId}`, {
+            axios.delete(`${API_URL}/cart/remove/${itemId}`, {  // API_URL kullan
                 headers: {
                     'Authorization': 'Bearer ' + token
                 }
             })
-                .then(() => {
-                    loadCartItems(); // Direkt loadCartItems'ı çağır
-                })
-                .catch(error => console.error('Error removing item:', error));
+            .then(() => {
+                loadCartItems();
+            })
+            .catch(error => console.error('Error removing item:', error));
         }
 
         function proceedToCheckout() {
             const token = localStorage.getItem('token');
             if (!token) {
-                window.location.href = '/src/login.html';
+                window.location.href = '/login.html';  // /src/ kaldırıldı
                 return;
             }
 
-            // Ödeme sayfasına yönlendir
-            window.location.href = '/src/checkout.html';
+            window.location.href = '/checkout.html';  // /src/ kaldırıldı
         }
 
         function updateQuantity(itemId, newQuantity) {
-            if (newQuantity < 1) return; // 0'dan küçük olamaz
+            if (newQuantity < 1) return;
 
             const token = localStorage.getItem('token');
             if (!token) return;
 
-            axios.put(`http://localhost:8080/api/cart/update/${itemId}`, 
+            axios.put(`${API_URL}/cart/update/${itemId}`,  // API_URL kullan
                 { quantity: newQuantity },
                 {
                     headers: {
@@ -197,15 +198,20 @@
                 }
             )
             .then(() => {
-                loadCartItems(); // Sepeti yeniden yükle
+                loadCartItems();
             })
             .catch(error => {
                 console.error('Error updating quantity:', error);
                 if (error.response && error.response.status === 401) {
-                    window.location.href = '/src/login.html';
+                    window.location.href = '/login.html';  // /src/ kaldırıldı
                 }
             });
         }
+
+        // Fonksiyonları global scope'a ekle
+        window.removeFromCart = removeFromCart;
+        window.proceedToCheckout = proceedToCheckout;
+        window.updateQuantity = updateQuantity;
     </script>
 </body>
 
