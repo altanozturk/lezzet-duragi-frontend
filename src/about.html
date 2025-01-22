@@ -134,11 +134,14 @@
 
     <div id="footer-placeholder"></div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
+    <script type="module">
+        import { updateNavbar } from './scripts/navbar.js';
+        import { loadFooter } from './scripts/footer.js';
+        
+        document.addEventListener('DOMContentLoaded', function() {
             updateNavbar();
+            loadFooter();
         });
-        $('#footer-placeholder').load('footer.html');
     </script>
 </body>
 
