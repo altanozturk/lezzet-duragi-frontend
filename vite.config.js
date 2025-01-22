@@ -14,7 +14,13 @@ export default defineConfig({
         contact: '/contact.html',
         cart: '/sepet.html',
         about: '/about.html'
-      }
+      },
+      external: [
+        '/scripts/navbar.js',
+        '/scripts/admin.js',
+        '/scripts/auth.js',
+        '/scripts/addToCart.js'
+      ]
     }
   },
   publicDir: '../public', // Statik dosyalar için
