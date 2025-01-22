@@ -97,12 +97,15 @@
 
     <div id="footer-placeholder"></div>
 
-    <script>
+    <script type="module">
+        import { updateNavbar } from './scripts/navbar.js';
+        import { loadFooter } from './scripts/footer.js';
+
         document.addEventListener('DOMContentLoaded', function () {
             updateNavbar();
+            loadFooter();
         });
-        $('#footer-placeholder').load('footer.html');
-
+        
         function showRegisterForm() {
             document.getElementById('loginForm').classList.add('hidden');
             document.getElementById('registerForm').classList.remove('hidden');
