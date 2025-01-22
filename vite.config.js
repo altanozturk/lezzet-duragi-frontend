@@ -10,12 +10,16 @@ export default defineConfig({
         main: '/index.html',  // ana giriş dosyası
         admin: '/admin.html', // admin sayfası
         login: '/login.html', // login sayfası
-        // diğer HTML dosyalarını da ekleyin
+        menu: '/menu.html',
+        contact: '/contact.html',
+        cart: '/sepet.html',
+        about: '/about.html'
       }
     },
     assetsDir: 'assets',  // Eklendi
     copyPublicDir: true   // Eklendi
   },
+  publicDir: '../public', // Statik dosyalar için
   server: {
     port: 3000
   }
