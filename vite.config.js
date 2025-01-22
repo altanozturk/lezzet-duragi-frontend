@@ -12,7 +12,9 @@ export default defineConfig({
         login: '/login.html', // login sayfası
         // diğer HTML dosyalarını da ekleyin
       }
-    }
+    },
+    assetsDir: 'assets',  // Eklendi
+    copyPublicDir: true   // Eklendi
   },
   server: {
     port: 3000
