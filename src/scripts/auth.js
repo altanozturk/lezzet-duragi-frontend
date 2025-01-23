@@ -66,7 +66,7 @@ export async function register(event) {
     }
 
     try {
-        const response = await axios.post(`${API_URL}/auth/register`, {
+        const response = await axios.post(`${API_URL}/user/register`, {
             username: username,
             email: email,
             password: password
