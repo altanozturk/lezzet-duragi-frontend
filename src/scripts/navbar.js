@@ -129,7 +129,7 @@ function renderNavbar(username = null, isAdmin = false) {
                                 <i class="fa-solid fa-user mr-2"></i>
                                 ${username}
                             </span>
-                            <button onclick="logout()" class="flex items-center hover:text-yellow-400 transition">
+                            <button onclick="window.logout()" class="flex items-center hover:text-yellow-400 transition">
                                 <i class="fa-solid fa-sign-out-alt mr-2"></i>
                                 Çıkış
                             </button>
@@ -145,6 +145,9 @@ function renderNavbar(username = null, isAdmin = false) {
         </nav>
     `;
 }
+
+// Fonksiyonları global scope'a ekle
+window.logout = logout;
 
 // Otomatik başlatma
 document.addEventListener('DOMContentLoaded', () => {
