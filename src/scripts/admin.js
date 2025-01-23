@@ -258,8 +258,8 @@ async function deleteProduct(id) {
     }
 }
 
-// Tab yönetimi
-function showTab(tabName) {
+// Tab yönetimi fonksiyonunu global scope'a ekle
+window.showTab = function(tabName) {
     // Tab butonlarını güncelle
     document.querySelectorAll('[id$="-tab"]').forEach(tab => {
         tab.classList.remove('border-yellow-500', 'text-yellow-500');
@@ -276,8 +276,8 @@ function showTab(tabName) {
     }
 }
 
-// Siparişleri yükle
-async function loadOrders() {
+// Siparişleri yükleme fonksiyonunu da global scope'a ekle
+window.loadOrders = async function() {
     try {
         const response = await axios.get(`${API_URL}/orders/admin/all`, {
             headers: {
@@ -285,11 +285,7 @@ async function loadOrders() {
             }
         });
         
-        console.log('Orders response:', response.data); // Debug için veriyi görelim
-        
-        // Response.data bir array değilse array'e çevirelim
-        const orders = Array.isArray(response.data) ? response.data : [];
-        displayOrders(orders);
+        displayOrders(response.data);
     } catch (error) {
         console.error('Error loading orders:', error);
         showMessage('Siparişler yüklenirken bir hata oluştu!', 'error');
