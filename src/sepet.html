@@ -57,6 +57,7 @@
 
     <script type="module">
         import { updateNavbar } from './scripts/navbar.js';
+        import { updateCartCount } from './scripts/navbar.js';
         import { loadFooter } from './scripts/footer.js';
         
         const API_URL = 'https://lezzet-duragi-backend-production.up.railway.app/api';
@@ -67,6 +68,9 @@
             window.location.href = '/login.html';  // /src/ kaldırıldı
         }
 
+        // Fonksiyonları global scope'a ekle
+        window.updateCartCount = updateCartCount;
+        
         document.addEventListener('DOMContentLoaded', function() {
             updateNavbar();
             loadFooter();
@@ -136,26 +140,32 @@
             cartTotal.textContent = total.toFixed(2);
         }
 
-        function loadCartItems() {
+        async function loadCartItems() {
             const token = localStorage.getItem('token');
-            if (!token) return;
+            if (!token) {
+                window.location.href = '/login.html';
+                return;
+            }
 
-            axios.get(`${API_URL}/cart/items`, {  // API_URL kullan
-                headers: {
-                    'Authorization': 'Bearer ' + token
-                }
-            })
-            .then(response => {
+            try {
+                const response = await axios.get(`${API_URL}/cart/summary`, {
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                });
+                
                 const cartItems = response.data;
                 updateCartUI(cartItems);
+                
+                // Sepet güncellendiğinde cart count'u da güncelle
                 updateCartCount();
-            })
-            .catch(error => {
+                
+            } catch (error) {
                 console.error('Error loading cart items:', error);
                 if (error.response && error.response.status === 401) {
-                    window.location.href = '/login.html';  // /src/ kaldırıldı
+                    window.location.href = '/login.html';
                 }
-            });
+            }
         }
 
         function removeFromCart(itemId) {
