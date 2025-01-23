@@ -397,46 +397,49 @@ function setupProductForm() {
             const imageInput = document.getElementById('productImage');
             const token = localStorage.getItem('token');
 
-            if (!nameInput || !priceInput || !categoryInput || !imageInput) {
-                console.error('Form elements missing');
-                showMessage('Form elemanları bulunamadı!', 'error');
+            if (!nameInput || !priceInput || !categoryInput || !imageInput || !imageInput.files[0]) {
+                console.error('Form elements missing or no image selected');
+                showMessage('Tüm alanları doldurun ve bir resim seçin!', 'error');
                 return;
             }
 
             // Resmi base64'e çevir
-            const compressedImage = await compressImage(imageInput.files[0]);
-            const reader = new FileReader();
-            reader.readAsDataURL(compressedImage);
-            
-            reader.onload = async function() {
-                const base64Image = reader.result.split(',')[1]; // base64 kısmını al
-
-                const productData = {
-                    name: nameInput.value,
-                    price: parseFloat(priceInput.value),
-                    category: categoryInput.value,
-                    imageData: base64Image
+            const base64Image = await new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const base64 = reader.result.split(',')[1];
+                    resolve(base64);
                 };
+                reader.readAsDataURL(imageInput.files[0]);
+            });
 
-                const response = await axios.post(`${API_URL}/products/admin/add`, productData, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                console.log('Response:', response);
-
-                showMessage('Ürün başarıyla eklendi!', 'success');
-                form.reset();
-                document.getElementById('imagePreview').classList.add('hidden');
-                document.getElementById('fileName').textContent = 'Resim seçilmedi';
-                loadProducts();
+            const productData = {
+                name: nameInput.value,
+                price: parseFloat(priceInput.value),
+                category: categoryInput.value,
+                imageData: base64Image
             };
+
+            console.log('Sending product data:', productData);
+
+            const response = await axios.post(`${API_URL}/products/admin/add`, productData, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            console.log('Response:', response);
+
+            showMessage('Ürün başarıyla eklendi!', 'success');
+            form.reset();
+            document.getElementById('imagePreview').classList.add('hidden');
+            document.getElementById('fileName').textContent = 'Resim seçilmedi';
+            loadProducts();
 
         } catch (error) {
             console.error('Error saving product:', error);
-            showMessage(`Ürün kaydedilirken bir hata oluştu: ${error.response?.data?.message || error.message}`, 'error');
+            showMessage(`Ürün kaydedilirken bir hata oluştu: ${error.response?.data || error.message}`, 'error');
         }
     });
 } 
