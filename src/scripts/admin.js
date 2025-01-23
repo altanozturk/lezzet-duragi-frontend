@@ -259,7 +259,7 @@ async function deleteProduct(id) {
 }
 
 // Tab yönetimi
-window.showTab = function(tabName) {
+function showTab(tabName) {
     // Tab butonlarını güncelle
     document.querySelectorAll('[id$="-tab"]').forEach(tab => {
         tab.classList.remove('border-yellow-500', 'text-yellow-500');
@@ -272,12 +272,12 @@ window.showTab = function(tabName) {
     document.getElementById(`${tabName}-content`).classList.remove('hidden');
     
     if (tabName === 'orders') {
-        window.loadOrders();
+        loadOrders();
     }
 }
 
 // Siparişleri yükle
-window.loadOrders = async function() {
+async function loadOrders() {
     try {
         const response = await axios.get(`${API_URL}/orders/admin/all`, {
             headers: {
@@ -285,6 +285,9 @@ window.loadOrders = async function() {
             }
         });
         
+        console.log('Orders response:', response.data); // Debug için veriyi görelim
+        
+        // Response.data bir array değilse array'e çevirelim
         const orders = Array.isArray(response.data) ? response.data : [];
         displayOrders(orders);
     } catch (error) {
@@ -324,7 +327,7 @@ function displayOrders(orders) {
 }
 
 // Sipariş detaylarını göster
-window.showOrderDetails = async function(orderId) {
+async function showOrderDetails(orderId) {
     try {
         const response = await axios.get(`${API_URL}/orders/admin/detail/${orderId}`, {
             headers: {
@@ -363,10 +366,14 @@ window.showOrderDetails = async function(orderId) {
     }
 }
 
-// Modal kapatma fonksiyonunu da global scope'a ekleyelim
-window.closeOrderDetails = function() {
+function closeOrderDetails() {
     document.getElementById('orderDetailsModal').classList.add('hidden');
 }
+
+// Sayfa yüklendiğinde products tab'ını aktif et
+document.addEventListener('DOMContentLoaded', function() {
+    showTab('products');
+});
 
 function setupProductForm() {
     const form = document.getElementById('productForm');
