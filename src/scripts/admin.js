@@ -381,65 +381,63 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function setupProductForm() {
     const form = document.getElementById('productForm');
-    if (!form) return;
+    if (!form) {
+        console.error('Product form not found');
+        return;
+    }
 
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
-
-        const nameInput = document.getElementById('productName');
-        const priceInput = document.getElementById('productPrice');
-        const categoryInput = document.getElementById('productCategory');
-        const imageInput = document.getElementById('productImage');
-
-        if (!nameInput || !priceInput || !categoryInput || !imageInput) {
-            showMessage('Form elemanları bulunamadı!', 'error');
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append('name', nameInput.value);
-        formData.append('price', priceInput.value);
-        formData.append('category', categoryInput.value);
-
-        // Resim varsa sıkıştır ve ekle
-        if (imageInput.files[0]) {
-            const compressedImage = await compressImage(imageInput.files[0]);
-            formData.append('image', compressedImage);
-        }
-
-        const productId = document.getElementById('productId')?.value;
-        const token = localStorage.getItem('token');
+        console.log('Form submitted');
 
         try {
-            if (productId) {
-                await axios.put(`${API_URL}/products/${productId}`, formData, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'multipart/form-data'
-                    }
-                });
-                showMessage('Ürün başarıyla güncellendi!', 'success');
-            } else {
-                await axios.post(`${API_URL}/products`, formData, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'multipart/form-data'
-                    }
-                });
-                showMessage('Ürün başarıyla eklendi!', 'success');
+            const nameInput = document.getElementById('productName');
+            const priceInput = document.getElementById('productPrice');
+            const categoryInput = document.getElementById('productCategory');
+            const imageInput = document.getElementById('productImage');
+            const token = localStorage.getItem('token');
+
+            if (!nameInput || !priceInput || !categoryInput || !imageInput) {
+                console.error('Form elements missing');
+                showMessage('Form elemanları bulunamadı!', 'error');
+                return;
             }
 
-            // Formu temizle
+            console.log('Form data:', {
+                name: nameInput.value,
+                price: priceInput.value,
+                category: categoryInput.value,
+                image: imageInput.files[0]
+            });
+
+            const formData = new FormData();
+            formData.append('name', nameInput.value);
+            formData.append('price', priceInput.value);
+            formData.append('category', categoryInput.value);
+
+            if (imageInput.files[0]) {
+                const compressedImage = await compressImage(imageInput.files[0]);
+                formData.append('image', compressedImage, imageInput.files[0].name);
+            }
+
+            const response = await axios.post(`${API_URL}/products/create`, formData, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+
+            console.log('Response:', response);
+
+            showMessage('Ürün başarıyla eklendi!', 'success');
             form.reset();
             document.getElementById('imagePreview').classList.add('hidden');
             document.getElementById('fileName').textContent = 'Resim seçilmedi';
-            if (document.getElementById('productId')) {
-                document.getElementById('productId').value = '';
-            }
             loadProducts();
+
         } catch (error) {
             console.error('Error saving product:', error);
-            showMessage('Ürün kaydedilirken bir hata oluştu!', 'error');
+            showMessage(`Ürün kaydedilirken bir hata oluştu: ${error.response?.data?.message || error.message}`, 'error');
         }
     });
 } 
