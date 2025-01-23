@@ -97,7 +97,9 @@ function showMessage(message, type) {
     const messageDiv = document.getElementById('success-message');
     messageDiv.textContent = message;
     messageDiv.style.display = 'block';
-    messageDiv.className = `fixed top-20 left-0 right-0 mx-auto w-full max-w-sm p-4 rounded-lg text-white text-center font-semibold shadow-lg z-[9999] ${type === 'success' ? 'bg-green-500' : 'bg-red-500'}`;
+    
+    // Sadece arka plan rengini değiştir, diğer stiller HTML'de sabit kalsın
+    messageDiv.style.backgroundColor = type === 'success' ? '#10B981' : '#EF4444';
     
     setTimeout(() => {
         messageDiv.style.display = 'none';
