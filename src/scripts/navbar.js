@@ -1,5 +1,5 @@
 // Environment variables'ı import et
-const API_URL = import.meta.env?.VITE_API_URL || 'http://localhost:8080/api';
+const API_URL = 'https://lezzet-duragi-backend-production.up.railway.app/api';
 
 // Fonksiyonları export et
 export async function updateNavbar() {
@@ -59,7 +59,7 @@ export function updateCartCount() {
         }
     })
     .catch(error => {
-        console.error('Error fetching cart count:', error);
+        console.error('Error updating cart count:', error);
     });
 }
 
