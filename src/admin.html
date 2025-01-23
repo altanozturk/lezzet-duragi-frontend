@@ -14,15 +14,15 @@
 </head>
 
 <body class="bg-slate-900 text-gray-100">
-    <!-- Loading ekranı -->
+    <div id="navbar-placeholder"></div>
+
+    <!-- Loading Indicator -->
     <div id="loading" class="fixed inset-0 bg-slate-900 flex items-center justify-center z-50">
         <div class="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-yellow-500"></div>
     </div>
 
-    <!-- Sayfa içeriği başlangıçta gizli -->
-    <div id="content" class="hidden">
-        <div id="navbar-placeholder"></div>
-
+    <!-- Main Content -->
+    <div id="content" class="hidden min-h-screen py-12">
         <div class="container mx-auto p-4">
             <!-- Tab Navigation -->
             <div class="mb-8 border-b border-slate-700">
@@ -185,15 +185,23 @@
                 </div>
             </div>
         </div>
-
-        <div id="footer-placeholder"></div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
+    <div id="footer-placeholder"></div>
+
+    <script type="module">
+        import { updateNavbar } from './scripts/navbar.js';
+        import { updateCartCount } from './scripts/navbar.js';
+        import { loadFooter } from './scripts/footer.js';
+        
+        // Fonksiyonu global scope'a ekle
+        window.updateCartCount = updateCartCount;
+        
+        document.addEventListener('DOMContentLoaded', function() {
             updateNavbar();
+            loadFooter();
+            updateCartCount();
         });
-        $('#footer-placeholder').load('footer.html');
     </script>
 </body>
 
