@@ -65,10 +65,10 @@ async function loadProducts() {
 }
 
 function displayProducts(products) {
-    const productsContainer = document.getElementById('productsList');
-    if (!productsContainer) return;
+    const container = document.getElementById('productList');
+    if (!container) return;
 
-    productsContainer.innerHTML = products.map(product => `
+    container.innerHTML = products.map(product => `
         <div class="bg-slate-700 p-4 rounded-lg flex items-center justify-between">
             <div class="flex items-center">
                 <img src="https://lezzet-duragi-backend-production.up.railway.app${product.imageUrl}" 
