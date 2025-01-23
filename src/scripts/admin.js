@@ -356,4 +356,53 @@ function closeOrderDetails() {
 // Sayfa yüklendiğinde products tab'ını aktif et
 document.addEventListener('DOMContentLoaded', function() {
     showTab('products');
-}); 
+});
+
+function setupProductForm() {
+    const form = document.getElementById('productForm');
+    if (!form) return;
+
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const productData = {
+            name: document.getElementById('productName').value,
+            price: parseFloat(document.getElementById('productPrice').value),
+            category: document.getElementById('productCategory').value,
+            imageUrl: document.getElementById('productImage').value
+        };
+
+        const productId = document.getElementById('productId')?.value;
+        const token = localStorage.getItem('token');
+
+        try {
+            if (productId) {
+                // Ürün güncelleme
+                await axios.put(`${API_URL}/products/${productId}`, productData, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                showMessage('Ürün başarıyla güncellendi!', 'success');
+            } else {
+                // Yeni ürün ekleme
+                await axios.post(`${API_URL}/products`, productData, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                showMessage('Ürün başarıyla eklendi!', 'success');
+            }
+
+            // Formu temizle ve ürünleri yeniden yükle
+            form.reset();
+            if (document.getElementById('productId')) {
+                document.getElementById('productId').value = '';
+            }
+            loadProducts();
+        } catch (error) {
+            console.error('Error saving product:', error);
+            showMessage('Ürün kaydedilirken bir hata oluştu!', 'error');
+        }
+    });
+} 
