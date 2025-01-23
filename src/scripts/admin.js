@@ -71,7 +71,7 @@ function displayProducts(products) {
     container.innerHTML = products.map(product => `
         <div class="bg-slate-700 p-4 rounded-lg flex items-center justify-between">
             <div class="flex items-center">
-                <img src="https://lezzet-duragi-backend-production.up.railway.app${product.imageUrl}" 
+                <img src="${API_URL.replace('/api', '')}${product.imageUrl}" 
                      alt="${product.name}" 
                      class="w-16 h-16 object-cover rounded-lg mr-4">
                 <div>
