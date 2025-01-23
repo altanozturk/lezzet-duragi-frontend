@@ -417,7 +417,7 @@ function setupProductForm() {
                 name: nameInput.value,
                 price: parseFloat(priceInput.value),
                 category: categoryInput.value,
-                imageData: base64Image
+                base64Image: base64Image  // imageData yerine base64Image kullan
             };
 
             console.log('Sending product data:', productData);
@@ -439,7 +439,9 @@ function setupProductForm() {
 
         } catch (error) {
             console.error('Error saving product:', error);
-            showMessage(`Ürün kaydedilirken bir hata oluştu: ${error.response?.data || error.message}`, 'error');
+            const errorMessage = error.response?.data || error.message;
+            console.log('Detailed error:', errorMessage);
+            showMessage(`Ürün kaydedilirken bir hata oluştu: ${errorMessage}`, 'error');
         }
     });
 } 
