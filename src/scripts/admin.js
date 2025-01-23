@@ -124,7 +124,7 @@ window.previewImage = function(event) {
 }
 
 // Resmi sıkıştıran fonksiyon
-function compressImage(file) {
+async function compressImage(file) {
     return new Promise((resolve) => {
         const reader = new FileReader();
         reader.onload = function(e) {
@@ -136,11 +136,10 @@ function compressImage(file) {
                 let width = img.width;
                 let height = img.height;
                 
-                // Maksimum boyutları daha da küçültelim
-                const MAX_WIDTH = 600;  // 800'den 600'e düşürdük
-                const MAX_HEIGHT = 400; // 600'den 400'e düşürdük
+                // Maksimum boyutları belirle
+                const MAX_WIDTH = 800;
+                const MAX_HEIGHT = 600;
                 
-                // En-boy oranını koru
                 if (width > height) {
                     if (width > MAX_WIDTH) {
                         height *= MAX_WIDTH / width;
@@ -157,12 +156,10 @@ function compressImage(file) {
                 canvas.height = height;
                 
                 const ctx = canvas.getContext('2d');
-                ctx.fillStyle = '#FFFFFF'; // Arka planı beyaz yap
-                ctx.fillRect(0, 0, width, height);
                 ctx.drawImage(img, 0, 0, width, height);
                 
-                // Kaliteyi 0.6'dan 0.4'e düşürdük
-                const compressedImage = canvas.toDataURL('image/jpeg', 0.4);
+                // JPEG formatında ve 0.7 kalitede sıkıştır
+                const compressedImage = canvas.toDataURL('image/jpeg', 0.7);
                 resolve(compressedImage);
             };
         };
@@ -385,43 +382,33 @@ function setupProductForm() {
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
         
-        const formData = new FormData();
-        formData.append('name', document.getElementById('productName').value);
-        formData.append('price', document.getElementById('productPrice').value);
-        formData.append('category', document.getElementById('productCategory').value);
-        formData.append('image', document.getElementById('productImage').files[0]);
-
-        const productId = document.getElementById('productId')?.value;
-        const token = localStorage.getItem('token');
+        const name = document.getElementById('productName').value.trim();
+        const price = document.getElementById('productPrice').value;
+        const imageFile = document.getElementById('productImage').files[0];
+        const category = document.getElementById('productCategory').value;
 
         try {
-            if (productId) {
-                // Ürün güncelleme
-                await axios.put(`${API_URL}/products/${productId}`, formData, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'multipart/form-data'
-                    }
-                });
-                showMessage('Ürün başarıyla güncellendi!', 'success');
-            } else {
-                // Yeni ürün ekleme
-                await axios.post(`${API_URL}/products`, formData, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'multipart/form-data'
-                    }
-                });
-                showMessage('Ürün başarıyla eklendi!', 'success');
-            }
+            // Resmi sıkıştır ve base64'e çevir
+            const compressedImage = await compressImage(imageFile);
+            
+            const product = {
+                name,
+                price: parseFloat(price),
+                imageUrl: compressedImage,  // Base64 formatında
+                category
+            };
 
-            // Formu temizle ve ürünleri yeniden yükle
+            const token = localStorage.getItem('token');
+            await axios.post(`${API_URL}/products`, product, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            
+            showMessage('Ürün başarıyla eklendi!', 'success');
             form.reset();
             document.getElementById('imagePreview').classList.add('hidden');
             document.getElementById('fileName').textContent = 'Resim seçilmedi';
-            if (document.getElementById('productId')) {
-                document.getElementById('productId').value = '';
-            }
             loadProducts();
         } catch (error) {
             console.error('Error saving product:', error);
