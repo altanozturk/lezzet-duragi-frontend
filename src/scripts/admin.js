@@ -99,31 +99,31 @@ async function loadProducts() {
 }
 
 function displayProducts(products) {
-    const container = document.getElementById('productList');
-    if (!container) return;
+    const productList = document.getElementById('productList');
+    if (!products || products.length === 0) {
+        productList.innerHTML = `
+            <div class="text-center text-gray-400 py-8">
+                Henüz ürün bulunmamaktadır
+            </div>
+        `;
+        return;
+    }
 
-    container.innerHTML = products.map(product => `
+    productList.innerHTML = products.map(product => `
         <div class="bg-slate-700 p-4 rounded-lg flex items-center justify-between">
-            <div class="flex items-center">
+            <div class="flex items-center space-x-4">
                 <img src="https://lezzet-duragi-backend-production.up.railway.app${product.imageUrl}" 
                      alt="${product.name}" 
-                     class="w-16 h-16 object-cover rounded-lg mr-4">
+                     class="w-16 h-16 object-cover rounded-lg">
                 <div>
                     <h3 class="font-semibold">${product.name}</h3>
                     <p class="text-gray-400">${product.price.toFixed(2)} TL</p>
-                    <p class="text-sm text-gray-500">${getCategoryName(product.category)}</p>
                 </div>
             </div>
-            <div class="flex space-x-2">
-                <button onclick="editProduct(${JSON.stringify(product).replace(/"/g, '&quot;')})" 
-                    class="text-yellow-500 hover:text-yellow-600">
-                    <i class="fas fa-edit"></i>
-                </button>
-                <button onclick="deleteProduct(${product.id})" 
-                    class="text-red-500 hover:text-red-600">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </div>
+            <button onclick="deleteProduct(${product.id})"
+                class="text-red-500 hover:text-red-600 transition">
+                <i class="fas fa-trash"></i>
+            </button>
         </div>
     `).join('');
 }
@@ -262,7 +262,8 @@ function showMessage(text, type) {
     }, 3000);
 }
 
-async function deleteProduct(id) {
+// Ürün silme fonksiyonunu global scope'a ekle
+window.deleteProduct = async function(id) {
     if (!confirm('Bu ürünü silmek istediğinizden emin misiniz?')) return;
     
     try {
@@ -273,14 +274,15 @@ async function deleteProduct(id) {
         });
         
         if (response.status === 200) {
+            showMessage('Ürün başarıyla silindi!', 'success');
             loadProducts(); // Başarılı olursa listeyi yenile
         } else {
             console.error('Error deleting product:', response.data);
-            alert('Ürün silinirken bir hata oluştu');
+            showMessage('Ürün silinirken bir hata oluştu!', 'error');
         }
     } catch (error) {
         console.error('Error deleting product:', error);
-        alert('Ürün silinirken bir hata oluştu');
+        showMessage('Ürün silinirken bir hata oluştu!', 'error');
     }
 }
 
