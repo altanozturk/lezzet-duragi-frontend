@@ -1,54 +1,57 @@
 const API_URL = 'https://lezzet-duragi-backend-production.up.railway.app/api';
 
+// Token kontrolünü ve admin kontrolünü bir fonksiyon içine alalım
+async function checkAdminStatus() {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        window.location.href = '/login.html';
+        return;
+    }
+
+    try {
+        const response = await axios.get(`${API_URL}/user/check-admin`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        
+        if (!response.data.isAdmin) {
+            window.location.href = '/index.html';
+            return;
+        }
+        
+        // Kullanıcı admin ise loading ekranını gizle ve içeriği göster
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('content').classList.remove('hidden');
+        
+        // Sayfayı yükle
+        loadProducts();
+        setupEventListeners();
+        
+    } catch (error) {
+        console.error('Error checking admin status:', error);
+        window.location.href = '/login.html';
+    }
+}
+
+function setupEventListeners() {
+    document.getElementById('productForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        if (!this.checkValidity()) {
+            return;
+        }
+
+        handleSubmit(e);
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     checkAdminStatus();
     loadOrders();
     loadProducts();
     setupProductForm();
 });
-
-// Token kontrolü
-const token = localStorage.getItem('token');
-if (!token) {
-    window.location.href = '/login.html';
-    return;
-}
-
-// Admin kontrolü
-try {
-    const response = await axios.get(`${API_URL}/user/check-admin`, {
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    });
-    
-    if (!response.data.isAdmin) {
-        window.location.href = '/index.html';
-        return;
-    }
-    
-    // Kullanıcı admin ise loading ekranını gizle ve içeriği göster
-    document.getElementById('loading').classList.add('hidden');
-    document.getElementById('content').classList.remove('hidden');
-    
-    // Sayfayı yükle
-    loadProducts();
-    document.getElementById('productForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        // Form validasyonunu kontrol et
-        if (!this.checkValidity()) {
-            // Form geçerli değilse, tarayıcının kendi hata mesajlarını göster
-            return;
-        }
-
-        handleSubmit(e);
-    });
-    
-} catch (error) {
-    console.error('Error checking admin status:', error);
-    window.location.href = '/login.html';
-}
 
 async function loadProducts() {
     try {
