@@ -403,37 +403,36 @@ function setupProductForm() {
                 return;
             }
 
-            console.log('Form data:', {
-                name: nameInput.value,
-                price: priceInput.value,
-                category: categoryInput.value,
-                image: imageInput.files[0]
-            });
+            // Resmi base64'e çevir
+            const compressedImage = await compressImage(imageInput.files[0]);
+            const reader = new FileReader();
+            reader.readAsDataURL(compressedImage);
+            
+            reader.onload = async function() {
+                const base64Image = reader.result.split(',')[1]; // base64 kısmını al
 
-            const formData = new FormData();
-            formData.append('name', nameInput.value);
-            formData.append('price', priceInput.value);
-            formData.append('category', categoryInput.value);
+                const productData = {
+                    name: nameInput.value,
+                    price: parseFloat(priceInput.value),
+                    category: categoryInput.value,
+                    imageData: base64Image
+                };
 
-            if (imageInput.files[0]) {
-                const compressedImage = await compressImage(imageInput.files[0]);
-                formData.append('image', compressedImage, imageInput.files[0].name);
-            }
+                const response = await axios.post(`${API_URL}/products/admin/add`, productData, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
 
-            const response = await axios.post(`${API_URL}/products/admin/add`, formData, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'multipart/form-data'
-                }
-            });
+                console.log('Response:', response);
 
-            console.log('Response:', response);
-
-            showMessage('Ürün başarıyla eklendi!', 'success');
-            form.reset();
-            document.getElementById('imagePreview').classList.add('hidden');
-            document.getElementById('fileName').textContent = 'Resim seçilmedi';
-            loadProducts();
+                showMessage('Ürün başarıyla eklendi!', 'success');
+                form.reset();
+                document.getElementById('imagePreview').classList.add('hidden');
+                document.getElementById('fileName').textContent = 'Resim seçilmedi';
+                loadProducts();
+            };
 
         } catch (error) {
             console.error('Error saving product:', error);
