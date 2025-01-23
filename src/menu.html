@@ -74,18 +74,20 @@
     <div id="footer-placeholder"></div>
 
     <script type="module">
-      import { updateNavbar } from './scripts/navbar.js';
-      import { loadMenuItems, filterCategory } from './scripts/menu.js';
-      import { loadFooter } from './scripts/footer.js';
-      
-      // filterCategory'yi global scope'a ekle çünkü HTML'den çağrılıyor
-      window.filterCategory = filterCategory;
-      
-      document.addEventListener('DOMContentLoaded', function() {
-        updateNavbar();
-        loadMenuItems();
-        loadFooter();
-      });
+        import { updateNavbar } from './scripts/navbar.js';
+        import { loadMenuItems, filterCategory } from './scripts/menu.js';
+        import { addToCart } from './scripts/addToCart.js';
+        import { loadFooter } from './scripts/footer.js';
+        
+        // Fonksiyonları global scope'a ekle
+        window.filterCategory = filterCategory;
+        window.addToCart = addToCart;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            updateNavbar();
+            loadMenuItems();
+            loadFooter();
+        });
     </script>
 </body>
 

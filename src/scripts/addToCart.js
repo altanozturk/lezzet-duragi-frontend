@@ -23,7 +23,7 @@ function handleTokenExpiration() {
     window.location.href = '/login.html';
 }
 
-function addToCart(productId, productName, price, imageUrl) {
+export function addToCart(productId, productName, price, imageUrl) {
     const token = localStorage.getItem('token');
     if (!token || !isTokenValid()) {
         window.location.href = '/login.html';
@@ -52,11 +52,10 @@ function addToCart(productId, productName, price, imageUrl) {
     })
     .catch(error => {
         console.error('Error:', error);
-        console.error('Response:', error.response?.data); // Hata mesajını detaylı görelim
         if (error.response && error.response.status === 401) {
             handleTokenExpiration();
         } else {
-            showNotification('Ürün eklenirken bir hata oluştu: ' + error.response?.data, 'error');
+            showNotification('Ürün eklenirken bir hata oluştu!', 'error');
         }
     });
 }
