@@ -84,20 +84,17 @@
             
             cartContainer.innerHTML = '';
 
-            if (!cartItems || cartItems.length === 0) {
-                // Sepet boşsa
+            if (!Array.isArray(cartItems) || cartItems.length === 0) {
                 cartContainer.innerHTML = `
                     <div class="text-center py-8">
                         <p class="text-gray-400">Sepetiniz boş</p>
                     </div>
                 `;
-                // Toplam fiyatı sıfırla ve özeti gizle
                 cartTotal.textContent = '0.00';
                 cartSummary.classList.add('hidden');
                 return;
             }
 
-            // Sepet doluysa özeti göster
             cartSummary.classList.remove('hidden');
 
             let total = 0;
@@ -136,7 +133,6 @@
                 cartContainer.innerHTML += itemHtml;
             });
 
-            // Toplam tutarı güncelle
             cartTotal.textContent = total.toFixed(2);
         }
 
@@ -154,10 +150,13 @@
                     }
                 });
                 
-                const cartItems = response.data;
+                // Response'u kontrol edelim
+                console.log('Cart response:', response.data);
+                
+                // items array'ini al
+                const cartItems = response.data.items || [];
                 updateCartUI(cartItems);
                 
-                // Sepet güncellendiğinde cart count'u da güncelle
                 updateCartCount();
                 
             } catch (error) {
