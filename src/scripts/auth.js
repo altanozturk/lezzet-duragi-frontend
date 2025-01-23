@@ -94,21 +94,21 @@ export async function register(event) {
 
 // Mesaj gösterme fonksiyonu
 function showMessage(message, type) {
-    const successMessage = document.getElementById('success-message');
-    successMessage.textContent = message;
-    successMessage.classList.remove('hidden');
+    const messageDiv = document.getElementById('success-message');
+    messageDiv.textContent = message;
+    messageDiv.style.display = 'block';  // hidden class yerine style.display kullanıyoruz
     
     if (type === 'success') {
-        successMessage.classList.remove('bg-red-500');
-        successMessage.classList.add('bg-green-500');
+        messageDiv.classList.remove('bg-red-500');
+        messageDiv.classList.add('bg-green-500');
     } else {
-        successMessage.classList.remove('bg-green-500');
-        successMessage.classList.add('bg-red-500');
+        messageDiv.classList.remove('bg-green-500');
+        messageDiv.classList.add('bg-red-500');
     }
     
     // 3 saniye sonra mesajı gizle
     setTimeout(() => {
-        successMessage.classList.add('hidden');
+        messageDiv.style.display = 'none';
     }, 3000);
 }
 
