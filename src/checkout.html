@@ -123,10 +123,15 @@
                 const itemTotal = item.quantity * item.priceAtAddition;
                 total += itemTotal;
                 return `
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <span class="font-semibold">${item.product.name}</span>
-                            <span class="text-gray-400 ml-2">x ${item.quantity}</span>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <img src="https://lezzet-duragi-backend-production.up.railway.app${item.product.imageUrl}" 
+                                 alt="${item.product.name}" 
+                                 class="w-12 h-12 object-cover rounded-lg mr-3">
+                            <div>
+                                <span class="font-semibold">${item.product.name}</span>
+                                <span class="text-gray-400 ml-2">x ${item.quantity}</span>
+                            </div>
                         </div>
                         <span>${itemTotal.toFixed(2)} TL</span>
                     </div>
