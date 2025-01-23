@@ -322,8 +322,8 @@ function displayOrders(orders) {
     `).join('');
 }
 
-// Sipariş detaylarını göster
-async function showOrderDetails(orderId) {
+// Sipariş detaylarını göster fonksiyonunu global scope'a ekle
+window.showOrderDetails = async function(orderId) {
     try {
         const response = await axios.get(`${API_URL}/orders/admin/detail/${orderId}`, {
             headers: {
@@ -362,7 +362,8 @@ async function showOrderDetails(orderId) {
     }
 }
 
-function closeOrderDetails() {
+// Modal kapatma fonksiyonunu da global scope'a ekle
+window.closeOrderDetails = function() {
     document.getElementById('orderDetailsModal').classList.add('hidden');
 }
 
