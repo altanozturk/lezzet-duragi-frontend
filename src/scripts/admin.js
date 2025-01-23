@@ -259,7 +259,7 @@ async function deleteProduct(id) {
 }
 
 // Tab yönetimi
-function showTab(tabName) {
+window.showTab = function(tabName) {
     // Tab butonlarını güncelle
     document.querySelectorAll('[id$="-tab"]').forEach(tab => {
         tab.classList.remove('border-yellow-500', 'text-yellow-500');
@@ -272,7 +272,7 @@ function showTab(tabName) {
     document.getElementById(`${tabName}-content`).classList.remove('hidden');
     
     if (tabName === 'orders') {
-        loadOrders();
+        window.loadOrders();
     }
 }
 
@@ -324,7 +324,7 @@ function displayOrders(orders) {
 }
 
 // Sipariş detaylarını göster
-async function showOrderDetails(orderId) {
+window.showOrderDetails = async function(orderId) {
     try {
         const response = await axios.get(`${API_URL}/orders/admin/detail/${orderId}`, {
             headers: {
@@ -363,14 +363,10 @@ async function showOrderDetails(orderId) {
     }
 }
 
-function closeOrderDetails() {
+// Modal kapatma fonksiyonunu da global scope'a ekleyelim
+window.closeOrderDetails = function() {
     document.getElementById('orderDetailsModal').classList.add('hidden');
 }
-
-// Sayfa yüklendiğinde products tab'ını aktif et
-document.addEventListener('DOMContentLoaded', function() {
-    showTab('products');
-});
 
 function setupProductForm() {
     const form = document.getElementById('productForm');
