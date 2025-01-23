@@ -9,63 +9,53 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="./scripts/navbar.js"></script>
+    <script type="module" src="./scripts/navbar.js"></script>
 </head>
 
 <body class="bg-slate-900 text-gray-100">
     <div id="navbar-placeholder"></div>
 
-    <!-- Ana içeriği başlangıçta gizli tut -->
-    <div id="success-content" class="hidden min-h-screen flex items-center justify-center py-12 px-4">
-        <div class="text-center">
-            <div class="mb-8">
-                <i class="fas fa-check-circle text-green-500 text-7xl mb-4"></i>
-                <h1 class="text-4xl font-bold mb-4">Siparişiniz Alındı!</h1>
-                <p class="text-xl text-gray-400 mb-8">Siparişiniz başarıyla oluşturuldu.</p>
-            </div>
-
-            <div class="bg-slate-800 rounded-lg p-6 mb-8 max-w-md mx-auto">
-                <p class="text-gray-300 mb-4">
-                    Siparişiniz en kısa sürede hazırlanıp adresinize teslim edilecektir.
-                </p>
-                <p class="text-gray-300">
-                    Bizi tercih ettiğiniz için teşekkür ederiz!
-                </p>
-            </div>
-
-            <div class="space-x-4">
-                <a href="/src/menu.html"
-                    class="inline-block bg-yellow-500 text-white px-6 py-3 rounded-lg hover:bg-yellow-600 transition duration-200">
-                    Menüye Dön
-                </a>
-                <a href="/src/index.html"
-                    class="inline-block bg-slate-700 text-white px-6 py-3 rounded-lg hover:bg-slate-600 transition duration-200">
-                    Ana Sayfa
-                </a>
+    <div class="min-h-screen py-20">
+        <div class="container mx-auto px-4">
+            <div class="max-w-2xl mx-auto text-center">
+                <div class="bg-slate-800 rounded-lg shadow-xl p-8">
+                    <div class="text-green-500 text-6xl mb-6">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h1 class="text-3xl font-bold mb-4">Siparişiniz Alındı!</h1>
+                    <p class="text-gray-400 mb-8">
+                        Siparişiniz başarıyla alınmıştır. En kısa sürede hazırlanıp teslim edilecektir.
+                    </p>
+                    <div class="space-y-4">
+                        <a href="/menu.html" 
+                           class="block w-full bg-yellow-500 text-white py-3 px-6 rounded-lg hover:bg-yellow-600 transition duration-200 shadow-lg shadow-yellow-500/20 font-semibold">
+                            Menüye Dön
+                        </a>
+                        <a href="/index.html" 
+                           class="block w-full bg-slate-700 text-white py-3 px-6 rounded-lg hover:bg-slate-600 transition duration-200 font-semibold">
+                            Ana Sayfaya Dön
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <div id="footer-placeholder"></div>
 
-    <script>
-        // Sayfa yüklenmeden önce kontrol yap
-        const token = localStorage.getItem('token');
-        const orderCompleted = sessionStorage.getItem('orderCompleted');
-
-        if (!token || !orderCompleted) {
-            window.location.href = '/src/index.html';
-        } else {
-            // Kontroller başarılıysa içeriği göster
-            document.getElementById('success-content').classList.remove('hidden');
-            sessionStorage.removeItem('orderCompleted');
-
-            document.addEventListener('DOMContentLoaded', function () {
-                updateNavbar();
-            });
-
-            $('#footer-placeholder').load('footer.html');
-        }
+    <script type="module">
+        import { updateNavbar } from './scripts/navbar.js';
+        import { updateCartCount } from './scripts/navbar.js';
+        import { loadFooter } from './scripts/footer.js';
+        
+        // Fonksiyonu global scope'a ekle
+        window.updateCartCount = updateCartCount;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            updateNavbar();
+            loadFooter();
+            updateCartCount();
+        });
     </script>
 </body>
 

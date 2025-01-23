@@ -14,7 +14,8 @@ export default defineConfig({
         contact: '/contact.html',
         cart: '/sepet.html',
         about: '/about.html',
-        checkout: '/checkout.html'  // checkout sayfasını ekledik
+        checkout: '/checkout.html',  // checkout sayfasını ekledik
+        orderSuccess: '/order-success.html'  // Yeni sayfayı ekledik
       }
     }
   },
