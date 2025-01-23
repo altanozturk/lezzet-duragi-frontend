@@ -61,7 +61,7 @@ export async function register(event) {
     const confirmPassword = document.getElementById('reg-confirm-password').value;
 
     if (password !== confirmPassword) {
-        alert('Şifreler eşleşmiyor!');
+        showMessage('Şifreler eşleşmiyor!', 'error');
         return;
     }
 
@@ -72,12 +72,44 @@ export async function register(event) {
             password: password
         });
 
-        alert('Kayıt başarılı! Lütfen giriş yapın.');
-        window.showLoginForm();
+        // Başarı mesajını göster
+        showMessage('Kayıt başarılı! Lütfen giriş yapın.', 'success');
+        
+        // Form alanlarını temizle
+        document.getElementById('reg-username').value = '';
+        document.getElementById('reg-email').value = '';
+        document.getElementById('reg-password').value = '';
+        document.getElementById('reg-confirm-password').value = '';
+        
+        // 2 saniye sonra login formuna geç
+        setTimeout(() => {
+            window.showLoginForm();
+        }, 2000);
+        
     } catch (error) {
         console.error('Register error:', error);
-        alert('Kayıt başarısız: ' + (error.response?.data?.message || 'Bir hata oluştu'));
+        showMessage('Kayıt başarısız: ' + (error.response?.data || 'Bir hata oluştu'), 'error');
     }
+}
+
+// Mesaj gösterme fonksiyonu
+function showMessage(message, type) {
+    const successMessage = document.getElementById('success-message');
+    successMessage.textContent = message;
+    successMessage.classList.remove('hidden');
+    
+    if (type === 'success') {
+        successMessage.classList.remove('bg-red-500');
+        successMessage.classList.add('bg-green-500');
+    } else {
+        successMessage.classList.remove('bg-green-500');
+        successMessage.classList.add('bg-red-500');
+    }
+    
+    // 3 saniye sonra mesajı gizle
+    setTimeout(() => {
+        successMessage.classList.add('hidden');
+    }, 3000);
 }
 
 // Token yönetimi fonksiyonları
