@@ -30,7 +30,7 @@ export async function login(event) {
     const password = document.getElementById('password').value;
 
     try {
-        const response = await axios.post(`${API_URL}/auth/login`, {
+        const response = await axios.post(`${API_URL}/user/login`, {
             username: username,
             password: password
         });
