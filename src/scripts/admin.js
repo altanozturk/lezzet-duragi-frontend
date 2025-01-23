@@ -158,10 +158,8 @@ async function compressImage(file) {
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0, width, height);
                 
-                // Debug için
-                console.log('Image compressed, original size:', file.size);
+                // JPEG formatında ve 0.7 kalitede sıkıştır
                 const compressedImage = canvas.toDataURL('image/jpeg', 0.7);
-                console.log('Compressed size:', compressedImage.length);
                 resolve(compressedImage);
             };
         };
