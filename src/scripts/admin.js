@@ -123,22 +123,24 @@ window.previewImage = function(event) {
     }
 }
 
-// Resim sıkıştırma fonksiyonu
-async function compressImage(file) {
+// Resmi sıkıştıran fonksiyon
+function compressImage(file) {
     return new Promise((resolve) => {
         const reader = new FileReader();
         reader.onload = function(e) {
             const img = new Image();
+            img.src = e.target.result;
+            
             img.onload = function() {
                 const canvas = document.createElement('canvas');
                 let width = img.width;
                 let height = img.height;
-
-                // Maksimum boyutlar
-                const MAX_WIDTH = 800;
-                const MAX_HEIGHT = 800;
-
-                // Boyutları oranları koruyarak küçült
+                
+                // Maksimum boyutları daha da küçültelim
+                const MAX_WIDTH = 600;  // 800'den 600'e düşürdük
+                const MAX_HEIGHT = 400; // 600'den 400'e düşürdük
+                
+                // En-boy oranını koru
                 if (width > height) {
                     if (width > MAX_WIDTH) {
                         height *= MAX_WIDTH / width;
@@ -150,22 +152,19 @@ async function compressImage(file) {
                         height = MAX_HEIGHT;
                     }
                 }
-
+                
                 canvas.width = width;
                 canvas.height = height;
-
+                
                 const ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#FFFFFF'; // Arka planı beyaz yap
+                ctx.fillRect(0, 0, width, height);
                 ctx.drawImage(img, 0, 0, width, height);
-
-                // Sıkıştırılmış resmi JPEG formatında al
-                canvas.toBlob((blob) => {
-                    resolve(new File([blob], file.name, {
-                        type: 'image/jpeg',
-                        lastModified: Date.now()
-                    }));
-                }, 'image/jpeg', 0.7); // 0.7 kalite oranı
+                
+                // Kaliteyi 0.6'dan 0.4'e düşürdük
+                const compressedImage = canvas.toDataURL('image/jpeg', 0.4);
+                resolve(compressedImage);
             };
-            img.src = e.target.result;
         };
         reader.readAsDataURL(file);
     });
@@ -381,45 +380,49 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function setupProductForm() {
     const form = document.getElementById('productForm');
-    if (!form) {
-        console.error('Product form not found');
-        return;
-    }
+    if (!form) return;
 
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
+        
+        const formData = new FormData();
+        formData.append('name', document.getElementById('productName').value);
+        formData.append('price', document.getElementById('productPrice').value);
+        formData.append('category', document.getElementById('productCategory').value);
+        formData.append('image', document.getElementById('productImage').files[0]);
+
+        const productId = document.getElementById('productId')?.value;
+        const token = localStorage.getItem('token');
 
         try {
-            const nameInput = document.getElementById('productName');
-            const priceInput = document.getElementById('productPrice');
-            const categoryInput = document.getElementById('productCategory');
-            const imageInput = document.getElementById('productImage');
-            const token = localStorage.getItem('token');
-
-            if (!nameInput || !priceInput || !categoryInput || !imageInput || !imageInput.files[0]) {
-                showMessage('Tüm alanları doldurun ve bir resim seçin!', 'error');
-                return;
+            if (productId) {
+                // Ürün güncelleme
+                await axios.put(`${API_URL}/products/${productId}`, formData, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+                showMessage('Ürün başarıyla güncellendi!', 'success');
+            } else {
+                // Yeni ürün ekleme
+                await axios.post(`${API_URL}/products`, formData, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+                showMessage('Ürün başarıyla eklendi!', 'success');
             }
 
-            const formData = new FormData();
-            formData.append('name', nameInput.value);
-            formData.append('price', priceInput.value);
-            formData.append('category', categoryInput.value);
-            formData.append('image', imageInput.files[0]);
-
-            const response = await axios.post(`${API_URL}/products/admin/add`, formData, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'multipart/form-data'
-                }
-            });
-
-            showMessage('Ürün başarıyla eklendi!', 'success');
+            // Formu temizle ve ürünleri yeniden yükle
             form.reset();
             document.getElementById('imagePreview').classList.add('hidden');
             document.getElementById('fileName').textContent = 'Resim seçilmedi';
+            if (document.getElementById('productId')) {
+                document.getElementById('productId').value = '';
+            }
             loadProducts();
-
         } catch (error) {
             console.error('Error saving product:', error);
             showMessage('Ürün kaydedilirken bir hata oluştu!', 'error');
