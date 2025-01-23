@@ -77,16 +77,19 @@
         import { updateNavbar } from './scripts/navbar.js';
         import { loadMenuItems, filterCategory } from './scripts/menu.js';
         import { addToCart } from './scripts/addToCart.js';
+        import { updateCartCount } from './scripts/navbar.js';
         import { loadFooter } from './scripts/footer.js';
         
         // Fonksiyonları global scope'a ekle
         window.filterCategory = filterCategory;
         window.addToCart = addToCart;
+        window.updateCartCount = updateCartCount;
         
         document.addEventListener('DOMContentLoaded', function() {
             updateNavbar();
             loadMenuItems();
             loadFooter();
+            updateCartCount();  // Sepet sayısını güncelle
         });
     </script>
 </body>

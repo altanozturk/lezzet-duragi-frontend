@@ -136,11 +136,16 @@
 
     <script type="module">
         import { updateNavbar } from './scripts/navbar.js';
+        import { updateCartCount } from './scripts/navbar.js';
         import { loadFooter } from './scripts/footer.js';
+        
+        // Fonksiyonu global scope'a ekle
+        window.updateCartCount = updateCartCount;
         
         document.addEventListener('DOMContentLoaded', function() {
             updateNavbar();
             loadFooter();
+            updateCartCount();  // Sepet sayısını güncelle
         });
     </script>
 </body>

@@ -12,12 +12,17 @@
   <script type="module">
     import { updateNavbar } from './scripts/navbar.js';
     import { loadPopularItems } from './scripts/popularItems.js';
+    import { updateCartCount } from './scripts/navbar.js';
     import { loadFooter } from './scripts/footer.js';
+    
+    // Fonksiyonu global scope'a ekle
+    window.updateCartCount = updateCartCount;
     
     document.addEventListener('DOMContentLoaded', function() {
       updateNavbar();
       loadPopularItems();
       loadFooter();
+      updateCartCount();  // Sepet sayısını güncelle
     });
   </script>
 </head>
