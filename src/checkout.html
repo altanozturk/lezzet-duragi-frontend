@@ -22,24 +22,10 @@
 
     <div class="min-h-screen py-20">
         <div class="container mx-auto px-4">
-            <div class="max-w-3xl mx-auto">
-                <h1 class="text-3xl font-bold mb-8">Sipariş Detayları</h1>
-
-                <!-- Sipariş Özeti -->
-                <div class="bg-slate-800 rounded-lg shadow-xl p-6 mb-8">
-                    <h2 class="text-xl font-semibold mb-4">Sipariş Özeti</h2>
-                    <div id="orderItems" class="space-y-4">
-                        <!-- Sipariş öğeleri buraya yüklenecek -->
-                    </div>
-                    <div class="mt-6 pt-4 border-t border-slate-700">
-                        <div class="flex justify-between items-center text-xl font-bold">
-                            <span>Toplam:</span>
-                            <span id="orderTotal" class="text-yellow-500">0.00 TL</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Teslimat Bilgileri Formu -->
+            <h1 class="text-3xl font-bold mb-8">Sipariş Detayları</h1>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Teslimat Bilgileri Formu - Sol Taraf -->
                 <div class="bg-slate-800 rounded-lg shadow-xl p-6">
                     <h2 class="text-xl font-semibold mb-4">Teslimat Bilgileri</h2>
                     <form id="checkoutForm" class="space-y-6">
@@ -68,6 +54,22 @@
                             Siparişi Tamamla
                         </button>
                     </form>
+                </div>
+
+                <!-- Sipariş Özeti - Sağ Taraf -->
+                <div class="lg:sticky lg:top-24 h-fit">
+                    <div class="bg-slate-800 rounded-lg shadow-xl p-6">
+                        <h2 class="text-xl font-semibold mb-4">Sipariş Özeti</h2>
+                        <div id="orderItems" class="space-y-4">
+                            <!-- Sipariş öğeleri buraya yüklenecek -->
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-slate-700">
+                            <div class="flex justify-between items-center text-xl font-bold">
+                                <span>Toplam:</span>
+                                <span id="orderTotal" class="text-yellow-500">0.00 TL</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
