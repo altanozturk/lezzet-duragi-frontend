@@ -79,6 +79,7 @@
 
     <script type="module">
         import { updateNavbar } from './scripts/navbar.js';
+        import { updateCartCount } from './scripts/navbar.js';
         import { loadFooter } from './scripts/footer.js';
         
         const API_URL = 'https://lezzet-duragi-backend-production.up.railway.app/api';
@@ -89,11 +90,15 @@
             window.location.href = '/login.html';
         }
 
+        // Fonksiyonu global scope'a ekle
+        window.updateCartCount = updateCartCount;
+
         document.addEventListener('DOMContentLoaded', function() {
             updateNavbar();
             loadFooter();
             loadOrderSummary();
             setupCheckoutForm();
+            updateCartCount();
         });
 
         async function loadOrderSummary() {
@@ -106,6 +111,7 @@
 
                 const items = response.data.items || [];
                 updateOrderUI(items);
+                updateCartCount();
             } catch (error) {
                 console.error('Error loading order summary:', error);
                 if (error.response?.status === 401) {
