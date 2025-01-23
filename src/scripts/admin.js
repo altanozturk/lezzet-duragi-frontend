@@ -277,7 +277,7 @@ function showTab(tabName) {
 }
 
 // Siparişleri yükle
-async function loadOrders() {
+window.loadOrders = async function() {
     try {
         const response = await axios.get(`${API_URL}/orders/admin/all`, {
             headers: {
@@ -285,9 +285,6 @@ async function loadOrders() {
             }
         });
         
-        console.log('Orders response:', response.data); // Debug için veriyi görelim
-        
-        // Response.data bir array değilse array'e çevirelim
         const orders = Array.isArray(response.data) ? response.data : [];
         displayOrders(orders);
     } catch (error) {
