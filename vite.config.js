@@ -13,7 +13,8 @@ export default defineConfig({
         menu: '/menu.html',
         contact: '/contact.html',
         cart: '/sepet.html',
-        about: '/about.html'
+        about: '/about.html',
+        checkout: '/checkout.html'  // checkout sayfasını ekledik
       }
     }
   },
