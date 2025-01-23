@@ -46,11 +46,45 @@ function setupEventListeners() {
     });
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    checkAdminStatus();
-    loadOrders();
-    loadProducts();
-    setupProductForm();
+document.addEventListener('DOMContentLoaded', async function() {
+    // Token kontrolü
+    const token = localStorage.getItem('token');
+    if (!token) {
+        window.location.href = '/login.html';
+        return;
+    }
+
+    // Admin kontrolü
+    try {
+        const response = await axios.get(`${API_URL}/user/check-admin`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        
+        if (!response.data.isAdmin) {
+            window.location.href = '/index.html';
+            return;
+        }
+        
+        // Kullanıcı admin ise loading ekranını gizle ve içeriği göster
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('content').classList.remove('hidden');
+        
+        // Sayfayı yükle
+        loadProducts();
+        
+        // Form submit event listener'ı bir kere ekle
+        const form = document.getElementById('productForm');
+        if (form) {
+            form.removeEventListener('submit', handleSubmit); // Varsa önceki listener'ı kaldır
+            form.addEventListener('submit', handleSubmit);
+        }
+        
+    } catch (error) {
+        console.error('Error checking admin status:', error);
+        window.location.href = '/login.html';
+    }
 });
 
 async function loadProducts() {
@@ -177,20 +211,12 @@ async function handleSubmit(e) {
     const category = document.getElementById('productCategory').value;
     const description = document.getElementById('productDescription').value.trim();
 
-    // Boş alan kontrolü
     if (!name || !price || !imageFile || !category || !description) {
         showMessage('Lütfen tüm alanları doldurun!', 'error');
         return;
     }
 
-    // Fiyat kontrolü
-    if (price <= 0) {
-        showMessage('Fiyat 0\'dan büyük olmalıdır!', 'error');
-        return;
-    }
-
     try {
-        // Resmi sıkıştır
         const compressedImage = await compressImage(imageFile);
         
         const product = {
