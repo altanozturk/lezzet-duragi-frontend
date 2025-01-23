@@ -420,7 +420,7 @@ function setupProductForm() {
                 formData.append('image', compressedImage, imageInput.files[0].name);
             }
 
-            const response = await axios.post(`${API_URL}/products/create`, formData, {
+            const response = await axios.post(`${API_URL}/products/admin/add`, formData, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data'
