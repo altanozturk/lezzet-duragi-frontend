@@ -35,16 +35,11 @@ export async function login(event) {
             password: password
         });
 
-        // Response'u kontrol et
-        console.log('Login response:', response.data);  // Debug için
+        const { token } = response.data;
+        localStorage.setItem('token', token);
+        localStorage.setItem('username', username);
 
-        if (response.data && response.data.token) {
-            localStorage.setItem('token', response.data.token);
-            localStorage.setItem('username', response.data.username);
-            window.location.href = '/index.html';
-        } else {
-            throw new Error('Token alınamadı');
-        }
+        window.location.href = '/index.html';
     } catch (error) {
         console.error('Login error:', error);
         alert('Giriş başarısız: ' + (error.response?.data?.message || 'Bir hata oluştu'));
