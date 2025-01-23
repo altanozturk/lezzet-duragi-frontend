@@ -96,14 +96,12 @@ export async function register(event) {
 function showMessage(message, type) {
     const messageDiv = document.getElementById('success-message');
     messageDiv.textContent = message;
-    messageDiv.style.display = 'block';  // hidden class yerine style.display kullanıyoruz
+    messageDiv.style.display = 'block';
     
     if (type === 'success') {
-        messageDiv.classList.remove('bg-red-500');
-        messageDiv.classList.add('bg-green-500');
+        messageDiv.className = 'fixed top-20 left-0 right-0 mx-auto w-full max-w-sm p-4 rounded-lg bg-green-500 text-white text-center font-semibold shadow-lg z-[9999]';
     } else {
-        messageDiv.classList.remove('bg-green-500');
-        messageDiv.classList.add('bg-red-500');
+        messageDiv.className = 'fixed top-20 left-0 right-0 mx-auto w-full max-w-sm p-4 rounded-lg bg-red-500 text-white text-center font-semibold shadow-lg z-[9999]';
     }
     
     // 3 saniye sonra mesajı gizle
