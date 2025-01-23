@@ -388,7 +388,6 @@ function setupProductForm() {
 
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
-        console.log('Form submitted');
 
         try {
             const nameInput = document.getElementById('productName');
@@ -398,38 +397,22 @@ function setupProductForm() {
             const token = localStorage.getItem('token');
 
             if (!nameInput || !priceInput || !categoryInput || !imageInput || !imageInput.files[0]) {
-                console.error('Form elements missing or no image selected');
                 showMessage('Tüm alanları doldurun ve bir resim seçin!', 'error');
                 return;
             }
 
-            // Resmi base64'e çevir
-            const base64Image = await new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.onload = () => {
-                    const base64 = reader.result.split(',')[1];
-                    resolve(base64);
-                };
-                reader.readAsDataURL(imageInput.files[0]);
-            });
+            const formData = new FormData();
+            formData.append('name', nameInput.value);
+            formData.append('price', priceInput.value);
+            formData.append('category', categoryInput.value);
+            formData.append('image', imageInput.files[0]);
 
-            const productData = {
-                name: nameInput.value,
-                price: parseFloat(priceInput.value),
-                category: categoryInput.value,
-                base64Image: base64Image  // imageData yerine base64Image kullan
-            };
-
-            console.log('Sending product data:', productData);
-
-            const response = await axios.post(`${API_URL}/products/admin/add`, productData, {
+            const response = await axios.post(`${API_URL}/products/admin/add`, formData, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'multipart/form-data'
                 }
             });
-
-            console.log('Response:', response);
 
             showMessage('Ürün başarıyla eklendi!', 'success');
             form.reset();
@@ -439,9 +422,7 @@ function setupProductForm() {
 
         } catch (error) {
             console.error('Error saving product:', error);
-            const errorMessage = error.response?.data || error.message;
-            console.log('Detailed error:', errorMessage);
-            showMessage(`Ürün kaydedilirken bir hata oluştu: ${errorMessage}`, 'error');
+            showMessage('Ürün kaydedilirken bir hata oluştu!', 'error');
         }
     });
 } 
