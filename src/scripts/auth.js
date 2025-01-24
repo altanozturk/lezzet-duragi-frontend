@@ -24,17 +24,12 @@ function checkAuthStatus() {
 
 // Hata mesajı gösterme fonksiyonu
 function showError(message) {
-    const errorDiv = document.getElementById('loginError');
-    errorDiv.textContent = message;
-    errorDiv.classList.remove('hidden');
+    showMessage(message, 'error');
 }
 
 // Login işlemi
 export async function login(event) {
     event.preventDefault();
-    
-    // Önceki hata mesajını temizle
-    document.getElementById('loginError').classList.add('hidden');
     
     const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value.trim();
