@@ -85,14 +85,38 @@ export async function login(event) {
 export async function register(event) {
     event.preventDefault();
     
-    const username = document.getElementById('reg-username').value;
-    const email = document.getElementById('reg-email').value;
-    const password = document.getElementById('reg-password').value;
-    const confirmPassword = document.getElementById('reg-confirm-password').value;
+    const username = document.getElementById('reg-username').value.trim();
+    const email = document.getElementById('reg-email').value.trim();
+    const password = document.getElementById('reg-password').value.trim();
+    const confirmPassword = document.getElementById('reg-confirm-password').value.trim();
+
+    // Boş alan kontrolü
+    if (!username || !email || !password || !confirmPassword) {
+        showMessage('Lütfen tüm alanları doldurun!', 'error');
+        return false;
+    }
+
+    // Minimum uzunluk kontrolü
+    if (username.length < 3) {
+        showMessage('Kullanıcı adı en az 3 karakter olmalıdır!', 'error');
+        return false;
+    }
+
+    if (password.length < 4) {
+        showMessage('Şifre en az 4 karakter olmalıdır!', 'error');
+        return false;
+    }
+
+    // Email formatı kontrolü
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        showMessage('Geçerli bir email adresi giriniz!', 'error');
+        return false;
+    }
 
     if (password !== confirmPassword) {
         showMessage('Şifreler eşleşmiyor!', 'error');
-        return;
+        return false;
     }
 
     try {
@@ -120,6 +144,7 @@ export async function register(event) {
         console.error('Register error:', error);
         showMessage('Kayıt başarısız: ' + (error.response?.data || 'Bir hata oluştu'), 'error');
     }
+    return false;
 }
 
 // Mesaj gösterme fonksiyonu
