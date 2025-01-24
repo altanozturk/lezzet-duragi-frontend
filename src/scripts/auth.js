@@ -22,9 +22,19 @@ function checkAuthStatus() {
     return false;
 }
 
+// Hata mesajı gösterme fonksiyonu
+function showError(message) {
+    const errorDiv = document.getElementById('loginError');
+    errorDiv.textContent = message;
+    errorDiv.classList.remove('hidden');
+}
+
 // Login işlemi
 export async function login(event) {
     event.preventDefault();
+    
+    // Önceki hata mesajını temizle
+    document.getElementById('loginError').classList.add('hidden');
     
     const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value.trim();
@@ -149,18 +159,4 @@ function handleTokenExpiration() {
     localStorage.removeItem('tokenExpiration');
     localStorage.removeItem('username');
     window.location.href = '/login.html';
-}
-
-// Yardımcı fonksiyonlar
-function showError(message) {
-    const successMessage = document.getElementById('success-message');
-    successMessage.textContent = message;
-    successMessage.classList.remove('hidden', 'bg-green-500');
-    successMessage.classList.add('bg-red-500');
-    successMessage.classList.remove('hidden');
-    
-    // 3 saniye sonra mesajı gizle
-    setTimeout(() => {
-        successMessage.classList.add('hidden');
-    }, 3000);
 } 
