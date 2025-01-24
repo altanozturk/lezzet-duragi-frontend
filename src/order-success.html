@@ -15,7 +15,13 @@
 <body class="bg-slate-900 text-gray-100">
     <div id="navbar-placeholder"></div>
 
-    <div class="min-h-screen py-20">
+    <!-- Loading Indicator -->
+    <div id="loading" class="fixed inset-0 bg-slate-900 flex items-center justify-center z-50">
+        <div class="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-yellow-500"></div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="content" class="hidden min-h-screen py-20">
         <div class="container mx-auto px-4">
             <div class="max-w-2xl mx-auto text-center">
                 <div class="bg-slate-800 rounded-lg shadow-xl p-8">
@@ -48,10 +54,23 @@
         import { updateCartCount } from './scripts/navbar.js';
         import { loadFooter } from './scripts/footer.js';
         
-        // Fonksiyonu global scope'a ekle
-        window.updateCartCount = updateCartCount;
-        
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Token ve orderCompleted kontrolü
+            const token = localStorage.getItem('token');
+            const orderCompleted = localStorage.getItem('orderCompleted');
+
+            if (!token || !orderCompleted) {
+                window.location.href = '/login.html';
+                return;
+            }
+
+            // Flag'i temizle ki sayfaya tekrar erişemesin
+            localStorage.removeItem('orderCompleted');
+            
+            // İçeriği göster
+            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('content').classList.remove('hidden');
+            
             updateNavbar();
             loadFooter();
             updateCartCount();
