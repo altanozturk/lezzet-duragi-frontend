@@ -26,8 +26,25 @@ function checkAuthStatus() {
 export async function login(event) {
     event.preventDefault();
     
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
+
+    // Boş alan kontrolü
+    if (!username || !password) {
+        showError('Lütfen tüm alanları doldurun!');
+        return false;
+    }
+
+    // Minimum uzunluk kontrolü
+    if (username.length < 3) {
+        showError('Kullanıcı adı en az 3 karakter olmalıdır!');
+        return false;
+    }
+
+    if (password.length < 4) {
+        showError('Şifre en az 4 karakter olmalıdır!');
+        return false;
+    }
 
     try {
         const response = await axios.post(`${API_URL}/user/login`, {
@@ -38,17 +55,25 @@ export async function login(event) {
         // Response'u kontrol et
         console.log('Login response:', response.data);
 
-        if (response.data && response.data.token) {
+        if (response.data.token) {
+            // Token'ı ve kullanıcı adını kaydet
             localStorage.setItem('token', response.data.token);
             localStorage.setItem('username', response.data.username);
+            
+            // Token'ın süresini hesapla ve kaydet (örneğin 24 saat)
+            const expirationTime = new Date().getTime() + (24 * 60 * 60 * 1000);
+            localStorage.setItem('tokenExpiration', expirationTime);
+            
+            // Ana sayfaya yönlendir
             window.location.href = '/index.html';
         } else {
-            throw new Error('Token alınamadı');
+            showError('Giriş başarısız!');
         }
     } catch (error) {
         console.error('Login error:', error);
-        alert('Giriş başarısız: ' + (error.response?.data || 'Bir hata oluştu'));
+        showError('Kullanıcı adı veya şifre hatalı!');
     }
+    return false;
 }
 
 // Register işlemi
