@@ -15,12 +15,18 @@
 <body class="bg-slate-900 text-gray-100">
     <div id="navbar-placeholder"></div>
 
-    <!-- Success/Error Message -->
-    <div id="success-message" style="display: none; position: fixed; top: 80px; left: 50%; transform: translateX(-50%); width: 400px;" 
-         class="p-4 rounded-lg text-white text-center font-semibold shadow-lg z-[9999]">
+    <!-- Loading Indicator -->
+    <div id="loading" class="fixed inset-0 bg-slate-900 flex items-center justify-center z-50">
+        <div class="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-yellow-500"></div>
     </div>
 
-    <div class="min-h-screen py-20">
+    <!-- Main Content -->
+    <div id="content" class="hidden min-h-screen py-20">
+        <!-- Success/Error Message -->
+        <div id="success-message" style="display: none; position: fixed; top: 80px; left: 50%; transform: translateX(-50%); width: 400px;" 
+             class="p-4 rounded-lg text-white text-center font-semibold shadow-lg z-[9999]">
+        </div>
+
         <div class="container mx-auto px-4">
             <h1 class="text-3xl font-bold mb-8">Sipariş Detayları</h1>
             
@@ -82,30 +88,30 @@
         import { updateCartCount } from './scripts/navbar.js';
         import { loadFooter } from './scripts/footer.js';
         
-        const API_URL = 'https://lezzet-duragi-backend-production.up.railway.app/api';
-        
-        // Token kontrolü
-        const token = localStorage.getItem('token');
-        if (!token) {
-            window.location.href = '/login.html';
-        }
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Token kontrolü
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '/login.html';
+                return;
+            }
 
-        // Fonksiyonu global scope'a ekle
-        window.updateCartCount = updateCartCount;
-
-        document.addEventListener('DOMContentLoaded', function() {
+            // Token geçerli ise içeriği göster
+            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('content').classList.remove('hidden');
+            
             updateNavbar();
             loadFooter();
-            loadOrderSummary();
-            setupCheckoutForm();
             updateCartCount();
+            loadCartSummary();
+            setupCheckoutForm();
         });
 
-        async function loadOrderSummary() {
+        async function loadCartSummary() {
             try {
-                const response = await axios.get(`${API_URL}/cart/summary`, {
+                const response = await axios.get(`https://lezzet-duragi-backend-production.up.railway.app/api/cart/summary`, {
                     headers: {
-                        'Authorization': 'Bearer ' + token
+                        'Authorization': 'Bearer ' + localStorage.getItem('token')
                     }
                 });
 
@@ -159,9 +165,9 @@
                 };
 
                 try {
-                    await axios.post(`${API_URL}/orders/create`, orderData, {
+                    await axios.post(`https://lezzet-duragi-backend-production.up.railway.app/api/orders/create`, orderData, {
                         headers: {
-                            'Authorization': 'Bearer ' + token
+                            'Authorization': 'Bearer ' + localStorage.getItem('token')
                         }
                     });
 
