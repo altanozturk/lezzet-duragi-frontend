@@ -3,12 +3,13 @@ const API_URL = 'https://lezzet-duragi-backend-production.up.railway.app/api';
 
 // Fonksiyonları export et
 export async function updateNavbar() {
-    const token = localStorage.getItem('token');
-    const username = localStorage.getItem('username');
+    const token = localStorage.getItem("token");
+    const username = localStorage.getItem("username");
+    const navbarPlaceholder = document.getElementById("navbar-placeholder");
 
     // Token yoksa veya geçersizse kullanıcıyı çıkış yapmış sayalım
     if (!token || !isTokenValid()) {
-        updateNavbarUI();
+        renderNavbar();
         return;
     }
 
@@ -20,10 +21,10 @@ export async function updateNavbar() {
             }
         });
         // Token varsa ve geçerliyse kullanıcı bilgilerini göster
-        updateNavbarUI(username, adminResponse.data.isAdmin);
+        renderNavbar(username, adminResponse.data.isAdmin);
     } catch (error) {
         console.error('Error checking admin status:', error);
-        updateNavbarUI(username, false);
+        renderNavbar(username, false);
     }
 }
 
@@ -197,7 +198,13 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Mobil menü işlevselliği
-document.getElementById('mobile-menu-button').addEventListener('click', function() {
+document.addEventListener('DOMContentLoaded', function() {
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
     const mobileMenu = document.getElementById('mobile-menu');
-    mobileMenu.classList.toggle('hidden');
+    
+    if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+            mobileMenu.classList.toggle('hidden');
+        });
+    }
 });
