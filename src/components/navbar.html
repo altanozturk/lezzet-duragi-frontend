@@ -1,44 +1,26 @@
-<nav class="bg-slate-900 fixed w-full z-50 top-0 border-b border-slate-800">
+<nav class="bg-slate-800">
     <div class="container mx-auto px-4">
         <div class="flex justify-between items-center h-16">
-            <!-- Logo -->
-            <a href="/index.html" class="text-2xl font-bold text-yellow-500">Lezzet Durağı</a>
+            <!-- Sol taraf -->
+            <div class="flex items-center">
+                <a href="index.html" class="text-yellow-500 text-xl font-bold">Lezzet Durağı</a>
+            </div>
 
-            <!-- Mobil Menü Butonu -->
-            <button id="mobile-menu-button" class="lg:hidden text-gray-300 hover:text-white">
-                <i class="fas fa-bars text-xl"></i>
-            </button>
-
-            <!-- Desktop Menü -->
-            <div class="hidden lg:flex items-center space-x-8">
-                <a href="/index.html" class="text-gray-300 hover:text-white transition">Ana Sayfa</a>
-                <a href="/menu.html" class="text-gray-300 hover:text-white transition">Menü</a>
-                <a href="/about.html" class="text-gray-300 hover:text-white transition">Hakkımızda</a>
-                <a href="/contact.html" class="text-gray-300 hover:text-white transition">İletişim</a>
-                <div id="auth-buttons" class="flex items-center space-x-4">
-                    <a href="/login.html" class="text-gray-300 hover:text-white transition">Giriş Yap</a>
-                </div>
-                <a href="/sepet.html" class="relative text-gray-300 hover:text-white transition">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span id="cart-count" class="absolute -top-2 -right-2 bg-yellow-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span>
+            <!-- Orta kısım -->
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="index.html" class="text-gray-300 hover:text-yellow-500 transition">Ana Sayfa</a>
+                <a href="menu.html" class="text-gray-300 hover:text-yellow-500 transition">Menü</a>
+                <a href="about.html" class="text-gray-300 hover:text-yellow-500 transition">Hakkımızda</a>
+                <a href="contact.html" class="text-gray-300 hover:text-yellow-500 transition">İletişim</a>
+                <!-- Admin Paneli butonu - varsayılan olarak gizli -->
+                <a href="admin.html" id="adminPanelButton" class="hidden text-gray-300 hover:text-yellow-500 transition">
+                    <i class="fas fa-cog mr-2"></i>Admin Paneli
                 </a>
             </div>
-        </div>
 
-        <!-- Mobil Menü -->
-        <div id="mobile-menu" class="lg:hidden hidden">
-            <div class="px-2 pt-2 pb-3 space-y-1">
-                <a href="/index.html" class="block px-3 py-2 text-gray-300 hover:text-white transition">Ana Sayfa</a>
-                <a href="/menu.html" class="block px-3 py-2 text-gray-300 hover:text-white transition">Menü</a>
-                <a href="/about.html" class="block px-3 py-2 text-gray-300 hover:text-white transition">Hakkımızda</a>
-                <a href="/contact.html" class="block px-3 py-2 text-gray-300 hover:text-white transition">İletişim</a>
-                <div id="mobile-auth-buttons" class="px-3 py-2">
-                    <a href="/login.html" class="text-gray-300 hover:text-white transition">Giriş Yap</a>
-                </div>
-                <a href="/sepet.html" class="block px-3 py-2 text-gray-300 hover:text-white transition">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span id="mobile-cart-count" class="ml-2 bg-yellow-500 text-white text-xs rounded-full px-2 py-1">0</span>
-                </a>
+            <!-- Sağ taraf -->
+            <div class="flex items-center space-x-4">
+                <!-- ... mevcut butonlar ... -->
             </div>
         </div>
     </div>

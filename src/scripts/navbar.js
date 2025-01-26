@@ -20,20 +20,8 @@ export async function updateNavbar() {
                 'Authorization': `Bearer ${token}`
             }
         });
-        
         // Token varsa ve geçerliyse kullanıcı bilgilerini göster
         renderNavbar(username, adminResponse.data.isAdmin);
-
-        // Mobil menü toggle'ı ayarla
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-
-        if (mobileMenuButton && mobileMenu) {
-            mobileMenuButton.addEventListener('click', function() {
-                mobileMenu.classList.toggle('hidden');
-            });
-        }
-
     } catch (error) {
         console.error('Error checking admin status:', error);
         renderNavbar(username, false);
@@ -95,65 +83,63 @@ function isTokenValid() {
 function renderNavbar(username = null, isAdmin = false) {
     const navbarPlaceholder = document.getElementById("navbar-placeholder");
     
-    const authButtonsHtml = username 
-        ? `
-            <span class="text-gray-300">${username}</span>
-            ${isAdmin ? '<a href="/admin.html" class="text-gray-300 hover:text-white transition">Admin Panel</a>' : ''}
-            <button onclick="logout()" class="text-gray-300 hover:text-white transition">Çıkış Yap</button>
-        `
-        : '<a href="/login.html" class="text-gray-300 hover:text-white transition">Giriş Yap</a>';
-
-    const mobileAuthButtonsHtml = username 
-        ? `
-            <span class="block text-gray-300">${username}</span>
-            ${isAdmin ? '<a href="/admin.html" class="block text-gray-300 hover:text-white transition">Admin Panel</a>' : ''}
-            <button onclick="logout()" class="block text-gray-300 hover:text-white transition">Çıkış Yap</button>
-        `
-        : '<a href="/login.html" class="block text-gray-300 hover:text-white transition">Giriş Yap</a>';
-
     navbarPlaceholder.innerHTML = `
-        <nav class="bg-slate-900 fixed w-full z-50 top-0 border-b border-slate-800">
-            <div class="container mx-auto px-4">
-                <div class="flex justify-between items-center h-16">
-                    <!-- Logo -->
-                    <a href="/index.html" class="text-2xl font-bold text-yellow-500">Lezzet Durağı</a>
-
-                    <!-- Mobil Menü Butonu -->
-                    <button id="mobile-menu-button" class="lg:hidden text-gray-300 hover:text-white">
-                        <i class="fas fa-bars text-xl"></i>
-                    </button>
-
-                    <!-- Desktop Menü -->
-                    <div class="hidden lg:flex items-center space-x-8">
-                        <a href="/index.html" class="text-gray-300 hover:text-white transition">Ana Sayfa</a>
-                        <a href="/menu.html" class="text-gray-300 hover:text-white transition">Menü</a>
-                        <a href="/about.html" class="text-gray-300 hover:text-white transition">Hakkımızda</a>
-                        <a href="/contact.html" class="text-gray-300 hover:text-white transition">İletişim</a>
-                        <div id="auth-buttons" class="flex items-center space-x-4">
-                            ${authButtonsHtml}
-                        </div>
-                        <a href="/sepet.html" class="relative text-gray-300 hover:text-white transition">
-                            <i class="fas fa-shopping-cart"></i>
-                            <span id="cart-count" class="absolute -top-2 -right-2 bg-yellow-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span>
+        <nav class="bg-slate-800 shadow-md h-16">
+            <div class="container mx-auto px-4 text-gray-100 py-3 flex items-center h-16">
+                <a href="/index.html" class="flex items-center">
+                    <span class="text-xl font-bold">Lezzet Durağı</span>
+                </a>
+                <div class="ml-12 flex space-x-8">
+                    <a href="/index.html" class="flex items-center hover:text-yellow-400 transition">
+                        <span class="mr-2"><i class="fa-solid fa-house"></i></span>
+                        Ana Sayfa
+                    </a>
+                    <a href="/menu.html" class="flex items-center hover:text-yellow-400 transition">
+                        <span class="mr-2"><i class="fa-solid fa-utensils"></i></span>
+                        Menü
+                    </a>
+                    <a href="/about.html" class="flex items-center hover:text-yellow-400 transition">
+                        <span class="mr-2"><i class="fa-solid fa-info-circle"></i></span>
+                        Hakkımızda
+                    </a>
+                    <a href="/contact.html" class="flex items-center hover:text-yellow-400 transition">
+                        <span class="mr-2"><i class="fa-solid fa-phone"></i></span>
+                        İletişim
+                    </a>
+                    ${isAdmin ? `
+                        <a href="/admin.html" class="flex items-center hover:text-yellow-400 transition">
+                            <span class="mr-2"><i class="fa-solid fa-cog"></i></span>
+                            Admin Paneli
                         </a>
-                    </div>
+                    ` : ''}
                 </div>
 
-                <!-- Mobil Menü -->
-                <div id="mobile-menu" class="lg:hidden hidden">
-                    <div class="px-2 pt-2 pb-3 space-y-1">
-                        <a href="/index.html" class="block px-3 py-2 text-gray-300 hover:text-white transition">Ana Sayfa</a>
-                        <a href="/menu.html" class="block px-3 py-2 text-gray-300 hover:text-white transition">Menü</a>
-                        <a href="/about.html" class="block px-3 py-2 text-gray-300 hover:text-white transition">Hakkımızda</a>
-                        <a href="/contact.html" class="block px-3 py-2 text-gray-300 hover:text-white transition">İletişim</a>
-                        <div id="mobile-auth-buttons" class="px-3 py-2">
-                            ${mobileAuthButtonsHtml}
+                <div class="ml-auto flex items-center space-x-6">
+                    <a href="/sepet.html" class="flex items-center hover:text-yellow-400 transition relative group">
+                        <div class="relative">
+                            <i class="fa-solid fa-shopping-cart text-xl"></i>
+                            <span id="cart-count" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-4 h-4 text-center text-[10px] font-bold shadow-md transform group-hover:scale-110 transition leading-4" style="display: none;">0</span>
                         </div>
-                        <a href="/sepet.html" class="block px-3 py-2 text-gray-300 hover:text-white transition">
-                            <i class="fas fa-shopping-cart"></i>
-                            <span id="mobile-cart-count" class="ml-2 bg-yellow-500 text-white text-xs rounded-full px-2 py-1">0</span>
+                        <span class="ml-3">Sepetim</span>
+                    </a>
+
+                    ${username ? `
+                        <div class="flex items-center space-x-4">
+                            <span class="flex items-center">
+                                <i class="fa-solid fa-user mr-2"></i>
+                                ${username}
+                            </span>
+                            <button onclick="window.logout()" class="flex items-center hover:text-yellow-400 transition">
+                                <i class="fa-solid fa-sign-out-alt mr-2"></i>
+                                Çıkış
+                            </button>
+                        </div>
+                    ` : `
+                        <a href="/login.html" class="flex items-center hover:text-yellow-400 transition">
+                            <i class="fa-solid fa-user mr-2"></i>
+                            Giriş / Kayıt
                         </a>
-                    </div>
+                    `}
                 </div>
             </div>
         </nav>
@@ -167,14 +153,4 @@ window.logout = logout;
 document.addEventListener('DOMContentLoaded', () => {
     updateNavbar();
     updateCartCount();
-
-    // Mobil menü toggle
-    const mobileMenuButton = document.getElementById('mobile-menu-button');
-    const mobileMenu = document.getElementById('mobile-menu');
-
-    if (mobileMenuButton && mobileMenu) {
-        mobileMenuButton.addEventListener('click', function() {
-            mobileMenu.classList.toggle('hidden');
-        });
-    }
 });
