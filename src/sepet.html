@@ -96,8 +96,10 @@
             cartSummary.classList.remove('hidden');
 
             let total = 0;
-            // Tüm HTML'i bir string olarak oluştur
-            const cartHTML = cartItems.map(item => {
+            // Sepet öğelerini ID'ye göre sırala
+            const sortedItems = [...cartItems].sort((a, b) => a.id - b.id);
+            
+            const cartHTML = sortedItems.map(item => {
                 total += item.quantity * item.priceAtAddition;
                 return `
                     <div class="flex items-center py-4 border-b border-slate-700">
@@ -131,7 +133,6 @@
                 `;
             }).join('');
 
-            // Tüm HTML'i bir kerede ekle
             cartContainer.innerHTML = cartHTML;
             cartTotal.textContent = total.toFixed(2);
         }
