@@ -20,8 +20,20 @@ export async function updateNavbar() {
                 'Authorization': `Bearer ${token}`
             }
         });
+        
         // Token varsa ve geçerliyse kullanıcı bilgilerini göster
         renderNavbar(username, adminResponse.data.isAdmin);
+
+        // Mobil menü toggle'ı ayarla
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+
     } catch (error) {
         console.error('Error checking admin status:', error);
         renderNavbar(username, false);
