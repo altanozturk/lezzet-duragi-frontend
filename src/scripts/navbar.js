@@ -3,13 +3,12 @@ const API_URL = 'https://lezzet-duragi-backend-production.up.railway.app/api';
 
 // Fonksiyonları export et
 export async function updateNavbar() {
-    const token = localStorage.getItem("token");
-    const username = localStorage.getItem("username");
-    const navbarPlaceholder = document.getElementById("navbar-placeholder");
+    const token = localStorage.getItem('token');
+    const username = localStorage.getItem('username');
 
     // Token yoksa veya geçersizse kullanıcıyı çıkış yapmış sayalım
     if (!token || !isTokenValid()) {
-        renderNavbar();
+        updateNavbarUI();
         return;
     }
 
@@ -21,10 +20,45 @@ export async function updateNavbar() {
             }
         });
         // Token varsa ve geçerliyse kullanıcı bilgilerini göster
-        renderNavbar(username, adminResponse.data.isAdmin);
+        updateNavbarUI(username, adminResponse.data.isAdmin);
     } catch (error) {
         console.error('Error checking admin status:', error);
-        renderNavbar(username, false);
+        updateNavbarUI(username, false);
+    }
+}
+
+// Navbar UI'ı güncelleme fonksiyonu
+function updateNavbarUI(username = null, isAdmin = false) {
+    // Desktop menü elemanları
+    const userMenu = document.getElementById('user-menu');
+    const authButtons = document.getElementById('auth-buttons');
+    const usernameDisplay = document.getElementById('username-display');
+    
+    // Mobil menü elemanları
+    const mobileUserMenu = document.getElementById('mobile-user-menu');
+    const mobileAuthButtons = document.getElementById('mobile-auth-buttons');
+    const mobileUsernameDisplay = document.getElementById('mobile-username-display');
+
+    if (username) {
+        // Desktop
+        userMenu.classList.remove('hidden');
+        userMenu.classList.add('flex');
+        authButtons.classList.add('hidden');
+        usernameDisplay.textContent = username;
+        
+        // Mobil
+        mobileUserMenu.classList.remove('hidden');
+        mobileAuthButtons.classList.add('hidden');
+        mobileUsernameDisplay.textContent = username;
+    } else {
+        // Desktop
+        userMenu.classList.add('hidden');
+        authButtons.classList.remove('hidden');
+        authButtons.classList.add('flex');
+        
+        // Mobil
+        mobileUserMenu.classList.add('hidden');
+        mobileAuthButtons.classList.remove('hidden');
     }
 }
 
@@ -42,24 +76,31 @@ export function logout() {
 }
 
 export function updateCartCount() {
+    // Desktop ve mobil sepet sayacını güncelle
+    const cartCount = document.getElementById('cart-count');
+    const mobileCartCount = document.getElementById('mobile-cart-count');
+    
     const token = localStorage.getItem('token');
-    if (!token) return;
+    if (!token) {
+        cartCount.textContent = '0';
+        mobileCartCount.textContent = '0';
+        return;
+    }
 
     axios.get(`${API_URL}/cart/count`, {
         headers: {
-            'Authorization': 'Bearer ' + token
+            'Authorization': `Bearer ${token}`
         }
     })
     .then(response => {
-        const cartCount = response.data;
-        const cartCountElement = document.getElementById('cart-count');
-        if (cartCountElement) {
-            cartCountElement.textContent = cartCount;
-            cartCountElement.style.display = cartCount > 0 ? 'block' : 'none';
-        }
+        const count = response.data;
+        cartCount.textContent = count;
+        mobileCartCount.textContent = count;
     })
     .catch(error => {
         console.error('Error updating cart count:', error);
+        cartCount.textContent = '0';
+        mobileCartCount.textContent = '0';
     });
 }
 
@@ -153,4 +194,10 @@ window.logout = logout;
 document.addEventListener('DOMContentLoaded', () => {
     updateNavbar();
     updateCartCount();
+});
+
+// Mobil menü işlevselliği
+document.getElementById('mobile-menu-button').addEventListener('click', function() {
+    const mobileMenu = document.getElementById('mobile-menu');
+    mobileMenu.classList.toggle('hidden');
 });
