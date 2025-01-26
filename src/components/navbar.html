@@ -2,13 +2,11 @@
     <div class="container mx-auto px-4">
         <div class="flex justify-between items-center h-16">
             <!-- Logo -->
-            <a href="/index.html" class="flex items-center">
-                <span class="text-xl font-bold text-yellow-500">Lezzet Durağı</span>
-            </a>
+            <a href="/index.html" class="text-2xl font-bold text-yellow-500">Lezzet Durağı</a>
 
             <!-- Mobil Menü Butonu -->
             <button id="mobile-menu-button" class="lg:hidden text-gray-300 hover:text-white">
-                <i class="fas fa-bars text-2xl"></i>
+                <i class="fas fa-bars text-xl"></i>
             </button>
 
             <!-- Desktop Menü -->
@@ -17,54 +15,30 @@
                 <a href="/menu.html" class="text-gray-300 hover:text-white transition">Menü</a>
                 <a href="/about.html" class="text-gray-300 hover:text-white transition">Hakkımızda</a>
                 <a href="/contact.html" class="text-gray-300 hover:text-white transition">İletişim</a>
-            </div>
-
-            <!-- Kullanıcı Menüsü - Desktop -->
-            <div class="hidden lg:flex items-center space-x-6">
-                <a href="/sepet.html" class="text-gray-300 hover:text-white transition relative">
+                <div id="auth-buttons" class="flex items-center space-x-4">
+                    <a href="/login.html" class="text-gray-300 hover:text-white transition">Giriş Yap</a>
+                </div>
+                <a href="/sepet.html" class="relative text-gray-300 hover:text-white transition">
                     <i class="fas fa-shopping-cart"></i>
                     <span id="cart-count" class="absolute -top-2 -right-2 bg-yellow-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span>
                 </a>
-                <div id="user-menu" class="hidden items-center space-x-4">
-                    <span id="username-display" class="text-gray-300"></span>
-                    <button onclick="logout()" class="text-gray-300 hover:text-white transition">
-                        <i class="fas fa-sign-out-alt"></i>
-                    </button>
-                </div>
-                <div id="auth-buttons" class="hidden space-x-4">
-                    <a href="/login.html" class="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition">
-                        Giriş Yap
-                    </a>
-                </div>
             </div>
         </div>
 
         <!-- Mobil Menü -->
         <div id="mobile-menu" class="lg:hidden hidden">
-            <div class="px-2 pt-2 pb-3 space-y-1 bg-slate-800 rounded-lg mt-2">
+            <div class="px-2 pt-2 pb-3 space-y-1">
                 <a href="/index.html" class="block px-3 py-2 text-gray-300 hover:text-white transition">Ana Sayfa</a>
                 <a href="/menu.html" class="block px-3 py-2 text-gray-300 hover:text-white transition">Menü</a>
                 <a href="/about.html" class="block px-3 py-2 text-gray-300 hover:text-white transition">Hakkımızda</a>
                 <a href="/contact.html" class="block px-3 py-2 text-gray-300 hover:text-white transition">İletişim</a>
-                <div class="border-t border-slate-700 my-2"></div>
+                <div id="mobile-auth-buttons" class="px-3 py-2">
+                    <a href="/login.html" class="text-gray-300 hover:text-white transition">Giriş Yap</a>
+                </div>
                 <a href="/sepet.html" class="block px-3 py-2 text-gray-300 hover:text-white transition">
-                    Sepet <span id="mobile-cart-count" class="bg-yellow-500 text-white text-xs rounded-full px-2 py-1 ml-2">0</span>
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="mobile-cart-count" class="ml-2 bg-yellow-500 text-white text-xs rounded-full px-2 py-1">0</span>
                 </a>
-                <div id="mobile-user-menu" class="hidden">
-                    <div class="border-t border-slate-700 my-2"></div>
-                    <div class="px-3 py-2 text-gray-300">
-                        <span id="mobile-username-display"></span>
-                        <button onclick="logout()" class="text-gray-300 hover:text-white transition ml-2">
-                            <i class="fas fa-sign-out-alt"></i> Çıkış Yap
-                        </button>
-                    </div>
-                </div>
-                <div id="mobile-auth-buttons" class="hidden">
-                    <div class="border-t border-slate-700 my-2"></div>
-                    <a href="/login.html" class="block px-3 py-2 text-yellow-500 hover:text-yellow-400 transition">
-                        Giriş Yap
-                    </a>
-                </div>
             </div>
         </div>
     </div>
