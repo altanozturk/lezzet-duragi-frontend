@@ -77,101 +77,63 @@
             loadCartItems();
         });
 
-        async function updateQuantity(cartItemId, newQuantity) {
-            try {
-                await axios.put(`https://lezzet-duragi-backend-production.up.railway.app/api/cart/update/${cartItemId}`, 
-                    { quantity: newQuantity },
-                    {
-                        headers: {
-                            'Authorization': `Bearer ${localStorage.getItem('token')}`
-                        }
-                    }
-                );
-                
-                // Sadece ilgili ürünün miktarını ve toplam fiyatını güncelle
-                const itemRow = document.querySelector(`[data-cart-item-id="${cartItemId}"]`);
-                if (itemRow) {
-                    const priceCell = itemRow.querySelector('.item-price');
-                    const price = parseFloat(priceCell.getAttribute('data-price'));
-                    const totalCell = itemRow.querySelector('.item-total');
-                    
-                    totalCell.textContent = `${(price * newQuantity).toFixed(2)} TL`;
-                }
-                
-                // Sepet toplamını güncelle
-                updateCartTotal();
-                updateCartCount();
-                
-            } catch (error) {
-                console.error('Error updating quantity:', error);
-                if (error.response && error.response.status === 401) {
-                    window.location.href = '/login.html';
-                }
-            }
-        }
+        function updateCartUI(cartItems) {
+            const cartContainer = document.getElementById('cartItems');
+            const cartSummary = document.getElementById('cart-summary');
+            const cartTotal = document.getElementById('cartTotal');
+            
+            cartContainer.innerHTML = '';
 
-        function updateCartTotal() {
-            const totalElements = document.querySelectorAll('.item-total');
-            let total = 0;
-            
-            totalElements.forEach(el => {
-                total += parseFloat(el.textContent);
-            });
-            
-            document.getElementById('cartTotal').textContent = `${total.toFixed(2)} TL`;
-        }
-
-        function updateCartUI(items) {
-            const container = document.getElementById('cartItems');
-            
-            if (!items || items.length === 0) {
-                container.innerHTML = `
+            if (!Array.isArray(cartItems) || cartItems.length === 0) {
+                cartContainer.innerHTML = `
                     <div class="text-center py-8">
                         <p class="text-gray-400">Sepetiniz boş</p>
-                        <a href="/menu.html" class="inline-block mt-4 px-6 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition">
-                            Menüye Git
-                        </a>
                     </div>
                 `;
-                document.getElementById('cartTotal').textContent = '0.00 TL';
-                document.getElementById('checkoutButton').classList.add('hidden');
+                cartTotal.textContent = '0.00';
+                cartSummary.classList.add('hidden');
                 return;
             }
 
-            container.innerHTML = items.map(item => `
-                <div class="flex items-center justify-between p-4 border-b border-slate-700" data-cart-item-id="${item.id}">
-                    <div class="flex items-center space-x-4">
-                        <img src="https://lezzet-duragi-backend-production.up.railway.app${item.product.imageUrl}" 
-                             alt="${item.product.name}" 
-                             class="w-16 h-16 object-cover rounded-lg">
-                        <div>
-                            <h3 class="font-semibold">${item.product.name}</h3>
-                            <p class="text-gray-400 item-price" data-price="${item.priceAtAddition}">${item.priceAtAddition.toFixed(2)} TL</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center space-x-4">
-                        <div class="flex items-center space-x-2">
-                            <button onclick="updateQuantity(${item.id}, ${Math.max(1, item.quantity - 1)})"
-                                class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-700 hover:bg-slate-600 transition">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                            <span class="w-8 text-center">${item.quantity}</span>
-                            <button onclick="updateQuantity(${item.id}, ${item.quantity + 1})"
-                                class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-700 hover:bg-slate-600 transition">
-                                <i class="fas fa-plus"></i>
-                            </button>
-                        </div>
-                        <span class="w-24 text-right item-total">${(item.quantity * item.priceAtAddition).toFixed(2)} TL</span>
-                        <button onclick="removeFromCart(${item.id})"
-                            class="text-red-500 hover:text-red-600 transition">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                </div>
-            `).join('');
+            cartSummary.classList.remove('hidden');
 
-            document.getElementById('checkoutButton').classList.remove('hidden');
-            updateCartTotal();
+            let total = 0;
+            cartItems.forEach(item => {
+                total += item.quantity * item.priceAtAddition;
+                const itemHtml = `
+                    <div class="flex items-center py-4 border-b border-slate-700">
+                        <img src="https://lezzet-duragi-backend-production.up.railway.app${item.product.imageUrl}" alt="${item.product.name}" 
+                            class="w-20 h-20 object-cover rounded-lg">
+                        <div class="ml-4 flex-grow">
+                            <h3 class="text-lg font-semibold">${item.product.name}</h3>
+                            <p class="text-gray-400">${item.priceAtAddition.toFixed(2)} TL</p>
+                        </div>
+                        <div class="flex items-center space-x-8">
+                            <div class="flex items-center bg-slate-700 rounded-lg overflow-hidden">
+                                <button onclick="updateQuantity(${item.id}, ${item.quantity - 1})" 
+                                    class="px-4 py-2 hover:bg-slate-600 transition">
+                                    -
+                                </button>
+                                <span class="px-4 py-2 bg-slate-800">${item.quantity}</span>
+                                <button onclick="updateQuantity(${item.id}, ${item.quantity + 1})"
+                                    class="px-4 py-2 hover:bg-slate-600 transition">
+                                    +
+                                </button>
+                            </div>
+                            <div class="w-24 text-right">
+                                <p class="font-semibold">${(item.quantity * item.priceAtAddition).toFixed(2)} TL</p>
+                            </div>
+                            <button onclick="removeFromCart(${item.id})" 
+                                class="text-red-500 hover:text-red-600 transition">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                cartContainer.innerHTML += itemHtml;
+            });
+
+            cartTotal.textContent = total.toFixed(2);
         }
 
         async function loadCartItems() {
@@ -228,6 +190,31 @@
             }
 
             window.location.href = '/checkout.html';  // /src/ kaldırıldı
+        }
+
+        function updateQuantity(itemId, newQuantity) {
+            if (newQuantity < 1) return;
+
+            const token = localStorage.getItem('token');
+            if (!token) return;
+
+            axios.put(`${API_URL}/cart/update/${itemId}`,  // API_URL kullan
+                { quantity: newQuantity },
+                {
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                }
+            )
+            .then(() => {
+                loadCartItems();
+            })
+            .catch(error => {
+                console.error('Error updating quantity:', error);
+                if (error.response && error.response.status === 401) {
+                    window.location.href = '/login.html';  // /src/ kaldırıldı
+                }
+            });
         }
 
         // Fonksiyonları global scope'a ekle
