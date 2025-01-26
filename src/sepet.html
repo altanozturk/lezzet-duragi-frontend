@@ -82,8 +82,6 @@
             const cartSummary = document.getElementById('cart-summary');
             const cartTotal = document.getElementById('cartTotal');
             
-            cartContainer.innerHTML = '';
-
             if (!Array.isArray(cartItems) || cartItems.length === 0) {
                 cartContainer.innerHTML = `
                     <div class="text-center py-8">
@@ -98,10 +96,10 @@
             cartSummary.classList.remove('hidden');
 
             let total = 0;
-            // Öğeleri doğrudan göster, sıralama yapma
-            cartItems.forEach(item => {
+            // Tüm HTML'i bir string olarak oluştur
+            const cartHTML = cartItems.map(item => {
                 total += item.quantity * item.priceAtAddition;
-                const itemHtml = `
+                return `
                     <div class="flex items-center py-4 border-b border-slate-700">
                         <img src="https://lezzet-duragi-backend-production.up.railway.app${item.product.imageUrl}" alt="${item.product.name}" 
                             class="w-20 h-20 object-cover rounded-lg">
@@ -131,9 +129,10 @@
                         </div>
                     </div>
                 `;
-                cartContainer.innerHTML += itemHtml;
-            });
+            }).join('');
 
+            // Tüm HTML'i bir kerede ekle
+            cartContainer.innerHTML = cartHTML;
             cartTotal.textContent = total.toFixed(2);
         }
 
