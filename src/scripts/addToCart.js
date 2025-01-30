@@ -23,41 +23,32 @@ function handleTokenExpiration() {
     window.location.href = '/login.html';
 }
 
-export function addToCart(productId, productName, price, imageUrl) {
-    const token = localStorage.getItem('token');
-    if (!token || !isTokenValid()) {
-        window.location.href = '/login.html';
-        return;
-    }
-
-    console.log('Adding to cart:', { productId, productName, price, imageUrl }); // Debug için
-
-    const cartItem = {
-        productId: productId,
-        productName: productName,
-        price: price,
-        quantity: 1,
-        imageUrl: imageUrl
-    };
-
-    axios.post(`${API_URL}/cart/add`, cartItem, {
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token
+export async function addToCart(product) {
+    try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = '/login.html';
+            return;
         }
-    })
-    .then(response => {
-        showNotification('Ürün sepete eklendi!', 'success');
+
+        const cartItem = {
+            productId: product.productId,
+            quantity: 1,
+            priceAtAddition: product.price
+        };
+
+        await axios.post(`${API_URL}/cart/add`, cartItem, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
         updateCartCount();
-    })
-    .catch(error => {
+        showMessage('Ürün sepete eklendi!', 'success');
+    } catch (error) {
         console.error('Error:', error);
-        if (error.response && error.response.status === 401) {
-            handleTokenExpiration();
-        } else {
-            showNotification('Ürün eklenirken bir hata oluştu!', 'error');
-        }
-    });
+        showMessage('Ürün sepete eklenirken bir hata oluştu!', 'error');
+    }
 }
 
 function updateCartCount() {
@@ -108,28 +99,6 @@ function updateCartCount() {
     });
 }
 
-function showNotification(message, type) {
-    const notification = document.createElement('div');
-    notification.className = `notification ${type}`;
-    notification.textContent = message;
-    notification.style.position = 'fixed';
-    notification.style.top = '20px';
-    notification.style.right = '20px';
-    notification.style.padding = '10px 20px';
-    notification.style.borderRadius = '5px';
-    notification.style.zIndex = '1000';
-    
-    if (type === 'success') {
-        notification.style.backgroundColor = '#4CAF50';
-        notification.style.color = 'white';
-    } else {
-        notification.style.backgroundColor = '#f44336';
-        notification.style.color = 'white';
-    }
-    
-    document.body.appendChild(notification);
-
-    setTimeout(() => {
-        notification.remove();
-    }, 3000);
+function showMessage(message, type) {
+    // Mesaj gösterme mantığı...
 }

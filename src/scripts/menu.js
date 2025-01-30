@@ -16,7 +16,12 @@ export function loadMenuItems(category = 'all') {
                             <p class="text-gray-400 mb-4">${item.description}</p>
                             <div class="flex justify-between items-center">
                                 <span class="text-lg font-bold text-yellow-500">${item.price.toFixed(2)} TL</span>
-                                <button onclick="window.addToCart(${JSON.stringify(item).replace(/"/g, '&quot;')})" 
+                                <button onclick="window.addToCart({
+                                    productId: ${item.id},
+                                    productName: '${item.name.replace(/'/g, "\\'")}',
+                                    price: ${item.price},
+                                    imageUrl: '${item.imageUrl.replace(/'/g, "\\'")}'
+                                })" 
                                         class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition shadow-lg shadow-yellow-500/20">
                                     Sepete Ekle
                                 </button>
