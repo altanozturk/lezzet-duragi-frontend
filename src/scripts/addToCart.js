@@ -31,22 +31,36 @@ export async function addToCart(product) {
             return;
         }
 
+        // Debug için gönderilen veriyi kontrol edelim
+        console.log('Product to add:', product);
+
         const cartItem = {
             productId: product.productId,
             quantity: 1,
             priceAtAddition: product.price
         };
 
-        await axios.post(`${API_URL}/cart/add`, cartItem, {
+        // Debug için request payload'ı kontrol edelim
+        console.log('Cart item to send:', cartItem);
+
+        const response = await axios.post(`${API_URL}/cart/add`, cartItem, {
             headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
             }
         });
+
+        // Debug için response'u kontrol edelim
+        console.log('Response:', response);
 
         updateCartCount();
         showMessage('Ürün sepete eklendi!', 'success');
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Error details:', {
+            message: error.message,
+            response: error.response?.data,
+            status: error.response?.status
+        });
         showMessage('Ürün sepete eklenirken bir hata oluştu!', 'error');
     }
 }
