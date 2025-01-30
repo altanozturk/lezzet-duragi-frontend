@@ -112,7 +112,7 @@ function displayProducts(products) {
     productList.innerHTML = products.map(product => `
         <div class="bg-slate-700 p-4 rounded-lg flex items-center justify-between">
             <div class="flex items-center space-x-4">
-                <img src="https://lezzet-duragi-backend-production.up.railway.app${product.imageUrl}" 
+                <img src="${product.imageUrl}"  // Artık direkt base64 stringi kullanıyoruz
                      alt="${product.name}" 
                      class="w-16 h-16 object-cover rounded-lg">
                 <div>
@@ -456,7 +456,7 @@ window.editProduct = function(product) {
     document.getElementById('editProductPrice').value = product.price;
     document.getElementById('editProductCategory').value = product.category;
     document.getElementById('editProductDescription').value = product.description;
-    document.getElementById('currentProductImage').src = `https://lezzet-duragi-backend-production.up.railway.app${product.imageUrl}`;
+    document.getElementById('currentProductImage').src = product.imageUrl;  // Direkt base64 kullan
     modal.classList.remove('hidden');
 }
 
