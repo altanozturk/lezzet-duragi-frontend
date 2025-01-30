@@ -199,8 +199,8 @@ async function compressImage(file) {
                 ctx.drawImage(img, 0, 0, width, height);
                 
                 // Base64 formatında sıkıştırılmış resmi döndür
-                const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
-                resolve(compressedBase64);
+                const base64String = canvas.toDataURL('image/jpeg', 0.7);
+                resolve(base64String);
             };
         };
         reader.readAsDataURL(file);
@@ -223,7 +223,6 @@ async function handleSubmit(e) {
     }
 
     try {
-        // Base64 formatında sıkıştırılmış resmi al
         const base64Image = await compressImage(imageFile);
         
         const product = {
@@ -234,7 +233,7 @@ async function handleSubmit(e) {
             description
         };
 
-        await axios.post(`${API_URL}/products/admin/add`, product, {
+        const response = await axios.post(`${API_URL}/products/admin/add`, product, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
@@ -407,48 +406,6 @@ document.addEventListener('DOMContentLoaded', function() {
     showTab('products');
 });
 
-function setupProductForm() {
-    const form = document.getElementById('productForm');
-    if (!form) return;
-
-    form.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        const name = document.getElementById('productName').value.trim();
-        const price = document.getElementById('productPrice').value;
-        const imageFile = document.getElementById('productImage').files[0];
-        const category = document.getElementById('productCategory').value;
-
-        try {
-            // Resmi sıkıştır ve base64'e çevir
-            const compressedImage = await compressImage(imageFile);
-            
-            const product = {
-                name,
-                price: parseFloat(price),
-                imageUrl: compressedImage,  // Base64 formatında
-                category
-            };
-
-            const token = localStorage.getItem('token');
-            await axios.post(`${API_URL}/products`, product, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            
-            showMessage('Ürün başarıyla eklendi!', 'success');
-            form.reset();
-            document.getElementById('imagePreview').classList.add('hidden');
-            document.getElementById('fileName').textContent = 'Resim seçilmedi';
-            loadProducts();
-        } catch (error) {
-            console.error('Error saving product:', error);
-            showMessage('Ürün kaydedilirken bir hata oluştu!', 'error');
-        }
-    });
-}
-
 // Ürün düzenleme fonksiyonlarını ekle
 window.editProduct = function(product) {
     const modal = document.getElementById('editProductModal');
@@ -518,4 +475,12 @@ window.previewEditImage = function(event) {
         }
         reader.readAsDataURL(file);
     }
-} 
+}
+
+// setupProductForm fonksiyonunu kaldır ve yerine sadece event listener ekle
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('productForm');
+    if (form) {
+        form.addEventListener('submit', handleSubmit);
+    }
+}); 
