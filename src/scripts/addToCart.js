@@ -23,46 +23,41 @@ function handleTokenExpiration() {
     window.location.href = '/login.html';
 }
 
-export async function addToCart(product) {
-    try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            window.location.href = '/login.html';
-            return;
-        }
-
-        // Debug için gönderilen veriyi kontrol edelim
-        console.log('Product to add:', product);
-
-        const cartItem = {
-            productId: product.productId,
-            quantity: 1,
-            priceAtAddition: product.price
-        };
-
-        // Debug için request payload'ı kontrol edelim
-        console.log('Cart item to send:', cartItem);
-
-        const response = await axios.post(`${API_URL}/cart/add`, cartItem, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
-        });
-
-        // Debug için response'u kontrol edelim
-        console.log('Response:', response);
-
-        updateCartCount();
-        showMessage('Ürün sepete eklendi!', 'success');
-    } catch (error) {
-        console.error('Error details:', {
-            message: error.message,
-            response: error.response?.data,
-            status: error.response?.status
-        });
-        showMessage('Ürün sepete eklenirken bir hata oluştu!', 'error');
+export function addToCart(productId, productName, price, imageUrl) {
+    const token = localStorage.getItem('token');
+    if (!token || !isTokenValid()) {
+        window.location.href = '/login.html';
+        return;
     }
+
+    console.log('Adding to cart:', { productId, productName, price, imageUrl }); // Debug için
+
+    const cartItem = {
+        productId: productId,
+        productName: productName,
+        price: price,
+        quantity: 1,
+        imageUrl: imageUrl
+    };
+
+    axios.post(`${API_URL}/cart/add`, cartItem, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+        }
+    })
+    .then(response => {
+        showNotification('Ürün sepete eklendi!', 'success');
+        updateCartCount();
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        if (error.response && error.response.status === 401) {
+            handleTokenExpiration();
+        } else {
+            showNotification('Ürün eklenirken bir hata oluştu!', 'error');
+        }
+    });
 }
 
 function updateCartCount() {
@@ -113,6 +108,28 @@ function updateCartCount() {
     });
 }
 
-function showMessage(message, type) {
-    // Mesaj gösterme mantığı...
+function showNotification(message, type) {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.textContent = message;
+    notification.style.position = 'fixed';
+    notification.style.top = '20px';
+    notification.style.right = '20px';
+    notification.style.padding = '10px 20px';
+    notification.style.borderRadius = '5px';
+    notification.style.zIndex = '1000';
+    
+    if (type === 'success') {
+        notification.style.backgroundColor = '#4CAF50';
+        notification.style.color = 'white';
+    } else {
+        notification.style.backgroundColor = '#f44336';
+        notification.style.color = 'white';
+    }
+    
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
 }
