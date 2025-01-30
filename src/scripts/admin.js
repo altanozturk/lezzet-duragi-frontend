@@ -112,7 +112,7 @@ function displayProducts(products) {
     productList.innerHTML = products.map(product => `
         <div class="bg-slate-700 p-4 rounded-lg flex items-center justify-between">
             <div class="flex items-center space-x-4">
-                <img src="${product.imageUrl}"  // Artık direkt base64 stringi kullanıyoruz
+                <img src="${product.imageUrl}"  // Base64 stringi direkt olarak kullan
                      alt="${product.name}" 
                      class="w-16 h-16 object-cover rounded-lg">
                 <div>
@@ -163,7 +163,7 @@ window.previewImage = function(event) {
     }
 }
 
-// Resmi sıkıştıran fonksiyon
+// Resmi sıkıştıran fonksiyonu güncelle
 async function compressImage(file) {
     return new Promise((resolve) => {
         const reader = new FileReader();
@@ -198,9 +198,9 @@ async function compressImage(file) {
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0, width, height);
                 
-                // JPEG formatında ve 0.7 kalitede sıkıştır
-                const compressedImage = canvas.toDataURL('image/jpeg', 0.7);
-                resolve(compressedImage);
+                // Base64 formatında sıkıştırılmış resmi döndür
+                const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+                resolve(compressedBase64);
             };
         };
         reader.readAsDataURL(file);
@@ -223,12 +223,13 @@ async function handleSubmit(e) {
     }
 
     try {
-        const compressedImage = await compressImage(imageFile);
+        // Base64 formatında sıkıştırılmış resmi al
+        const base64Image = await compressImage(imageFile);
         
         const product = {
             name,
             price: parseFloat(price),
-            imageUrl: compressedImage,
+            imageUrl: base64Image,  // Base64 stringi direkt olarak gönder
             category,
             description
         };
