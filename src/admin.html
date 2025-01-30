@@ -181,6 +181,74 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Ürün Düzenleme Modal -->
+            <div id="editProductModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+                <div class="bg-slate-800 p-6 rounded-lg w-full max-w-md">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-bold">Ürün Düzenle</h2>
+                        <button onclick="closeEditModal()" class="text-gray-400 hover:text-white">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    
+                    <form onsubmit="handleEditSubmit(event)" class="space-y-4">
+                        <input type="hidden" id="editProductId">
+                        
+                        <div>
+                            <label class="block mb-1">Ürün Adı</label>
+                            <input type="text" id="editProductName" required
+                                class="w-full px-3 py-2 bg-slate-700 rounded text-white">
+                        </div>
+                        
+                        <div>
+                            <label class="block mb-1">Fiyat</label>
+                            <input type="number" step="0.01" id="editProductPrice" required
+                                class="w-full px-3 py-2 bg-slate-700 rounded text-white">
+                        </div>
+                        
+                        <div>
+                            <label class="block mb-1">Kategori</label>
+                            <select id="editProductCategory" required
+                                class="w-full px-3 py-2 bg-slate-700 rounded text-white">
+                                <option value="durum">Dürüm</option>
+                                <option value="patso">Patso</option>
+                                <option value="pizza">Pizza</option>
+                                <option value="sides">Yan Ürünler</option>
+                                <option value="drinks">İçecekler</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block mb-1">Açıklama</label>
+                            <textarea id="editProductDescription" required
+                                class="w-full px-3 py-2 bg-slate-700 rounded text-white resize-none"
+                                rows="3"></textarea>
+                        </div>
+                        
+                        <div>
+                            <label class="block mb-1">Mevcut Resim</label>
+                            <img id="currentProductImage" class="w-32 h-32 object-cover rounded mb-2">
+                            
+                            <label class="block mb-1">Yeni Resim (İsteğe bağlı)</label>
+                            <input type="file" id="editProductImage" accept="image/*"
+                                onchange="previewEditImage(event)"
+                                class="w-full px-3 py-2 bg-slate-700 rounded text-white">
+                        </div>
+
+                        <div class="flex justify-end space-x-2 mt-6">
+                            <button type="button" onclick="closeEditModal()"
+                                class="px-4 py-2 bg-gray-600 rounded hover:bg-gray-700 transition">
+                                İptal
+                            </button>
+                            <button type="submit"
+                                class="px-4 py-2 bg-yellow-500 rounded hover:bg-yellow-600 transition">
+                                Güncelle
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 

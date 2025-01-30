@@ -120,10 +120,16 @@ function displayProducts(products) {
                     <p class="text-gray-400">${product.price.toFixed(2)} TL</p>
                 </div>
             </div>
-            <button onclick="deleteProduct(${product.id})"
-                class="text-red-500 hover:text-red-600 transition">
-                <i class="fas fa-trash"></i>
-            </button>
+            <div class="flex space-x-2">
+                <button onclick="editProduct(${JSON.stringify(product).replace(/"/g, '&quot;')})"
+                    class="text-yellow-500 hover:text-yellow-600 transition">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button onclick="deleteProduct(${product.id})"
+                    class="text-red-500 hover:text-red-600 transition">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
         </div>
     `).join('');
 }
@@ -440,4 +446,75 @@ function setupProductForm() {
             showMessage('Ürün kaydedilirken bir hata oluştu!', 'error');
         }
     });
+}
+
+// Ürün düzenleme fonksiyonlarını ekle
+window.editProduct = function(product) {
+    const modal = document.getElementById('editProductModal');
+    document.getElementById('editProductId').value = product.id;
+    document.getElementById('editProductName').value = product.name;
+    document.getElementById('editProductPrice').value = product.price;
+    document.getElementById('editProductCategory').value = product.category;
+    document.getElementById('editProductDescription').value = product.description;
+    document.getElementById('currentProductImage').src = `https://lezzet-duragi-backend-production.up.railway.app${product.imageUrl}`;
+    modal.classList.remove('hidden');
+}
+
+window.closeEditModal = function() {
+    document.getElementById('editProductModal').classList.add('hidden');
+}
+
+window.handleEditSubmit = async function(e) {
+    e.preventDefault();
+    
+    const id = document.getElementById('editProductId').value;
+    const name = document.getElementById('editProductName').value.trim();
+    const price = document.getElementById('editProductPrice').value;
+    const category = document.getElementById('editProductCategory').value;
+    const description = document.getElementById('editProductDescription').value.trim();
+    const imageFile = document.getElementById('editProductImage').files[0];
+
+    try {
+        let imageUrl = null;
+        if (imageFile) {
+            imageUrl = await compressImage(imageFile);
+        }
+
+        const product = {
+            id,
+            name,
+            price: parseFloat(price),
+            category,
+            description
+        };
+
+        if (imageUrl) {
+            product.imageUrl = imageUrl;
+        }
+
+        await axios.put(`${API_URL}/products/admin/update/${id}`, product, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+
+        showMessage('Ürün başarıyla güncellendi!', 'success');
+        closeEditModal();
+        loadProducts();
+    } catch (error) {
+        console.error('Error updating product:', error);
+        showMessage('Ürün güncellenirken bir hata oluştu!', 'error');
+    }
+}
+
+// Resim önizleme fonksiyonunu ekle
+window.previewEditImage = function(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('currentProductImage').src = e.target.result;
+        }
+        reader.readAsDataURL(file);
+    }
 } 
