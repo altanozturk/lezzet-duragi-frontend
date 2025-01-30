@@ -23,21 +23,21 @@ function handleTokenExpiration() {
     window.location.href = '/login.html';
 }
 
-export function addToCart(productId, productName, price, imageUrl) {
+export function addToCart(product) {
     const token = localStorage.getItem('token');
     if (!token || !isTokenValid()) {
         window.location.href = '/login.html';
         return;
     }
 
-    console.log('Adding to cart:', { productId, productName, price, imageUrl }); // Debug için
+    console.log('Adding to cart:', product); // Debug için
 
     const cartItem = {
-        productId: productId,
-        productName: productName,
-        price: price,
+        productId: product.id,
+        productName: product.name,
+        price: product.price,
         quantity: 1,
-        imageUrl: imageUrl
+        imageUrl: product.imageUrl
     };
 
     axios.post(`${API_URL}/cart/add`, cartItem, {
