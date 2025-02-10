@@ -5,7 +5,6 @@ const API_URL = 'https://lezzet-duragi-backend-production.up.railway.app/api';
 export async function updateNavbar() {
     const token = localStorage.getItem("token");
     const username = localStorage.getItem("username");
-    const navbarPlaceholder = document.getElementById("navbar-placeholder");
 
     // Token yoksa veya geçersizse kullanıcıyı çıkış yapmış sayalım
     if (!token || !isTokenValid()) {

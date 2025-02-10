@@ -1,6 +1,5 @@
 const API_URL = 'https://lezzet-duragi-backend-production.up.railway.app/api';
 
-// Token kontrolünü ve admin kontrolünü bir fonksiyon içine alalım
 async function checkAdminStatus() {
     const token = localStorage.getItem('token');
     if (!token) {
