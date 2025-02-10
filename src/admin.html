@@ -132,10 +132,10 @@
 
             <!-- Order Details Modal -->
             <div id="orderDetailsModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-                <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl p-6 max-w-2xl w-full mx-4 shadow-xl border border-slate-600/20">
+                <div class="bg-slate-800 rounded-lg p-6 max-w-2xl w-full mx-4">
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-xl font-bold text-gray-200">Sipariş Detayları</h3>
-                        <button onclick="closeOrderDetails()" class="text-gray-400 hover:text-white transition duration-300">
+                        <h3 class="text-xl font-bold">Sipariş Detayları</h3>
+                        <button onclick="closeOrderDetails()" class="text-gray-400 hover:text-white">
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
@@ -173,9 +173,9 @@
                     <!-- Sipariş Ürünleri -->
                     <div class="mb-6">
                         <h4 class="font-semibold mb-3">Sipariş Ürünleri</h4>
-                        <div class="bg-slate-900/50 rounded-lg overflow-hidden border border-slate-700/30">
+                        <div class="bg-slate-700 rounded-lg overflow-hidden">
                             <table class="w-full">
-                                <thead class="bg-slate-800/80">
+                                <thead class="bg-slate-600">
                                     <tr>
                                         <th class="px-4 py-2 text-left">Ürün</th>
                                         <th class="px-4 py-2 text-center">Adet</th>
@@ -190,10 +190,10 @@
                         </div>
                     </div>
 
-                    <!-- Toplam Tutar - Geri Eklendi -->
+                    <!-- Toplam -->
                     <div class="text-right">
                         <p class="text-gray-400">Toplam Tutar:</p>
-                        <p id="orderDetailTotal" class="text-xl font-bold text-yellow-500">0.00 TL</p>
+                        <p id="orderDetailTotal" class="text-xl font-bold text-yellow-500">289.98 TL</p>
                     </div>
                 </div>
             </div>
