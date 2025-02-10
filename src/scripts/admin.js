@@ -101,33 +101,40 @@ function displayProducts(products) {
     const productList = document.getElementById('productList');
     if (!products || products.length === 0) {
         productList.innerHTML = `
-            <div class="text-center text-gray-400 py-8">
-                Henüz ürün bulunmamaktadır
+            <div class="col-span-full text-center text-gray-400 py-12 bg-slate-800/50 rounded-xl backdrop-blur-sm">
+                <i class="fas fa-box-open text-4xl mb-4"></i>
+                <p>Henüz ürün bulunmamaktadır</p>
             </div>
         `;
         return;
     }
 
     productList.innerHTML = products.map(product => `
-        <div class="bg-slate-700 p-4 rounded-lg flex items-center justify-between">
-            <div class="flex items-center space-x-4">
-                <img src="${product.imageUrl}"  // Base64 stringi direkt olarak kullan
+        <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl overflow-hidden shadow-xl border border-slate-700/50 transition duration-300 hover:transform hover:scale-[1.02]">
+            <div class="relative">
+                <img src="${product.imageUrl}" 
                      alt="${product.name}" 
-                     class="w-16 h-16 object-cover rounded-lg">
-                <div>
-                    <h3 class="font-semibold">${product.name}</h3>
-                    <p class="text-gray-400">${product.price.toFixed(2)} TL</p>
+                     class="w-full h-48 object-cover">
+                <div class="absolute top-0 right-0 m-2 bg-yellow-500 text-white px-2 py-1 rounded-lg text-sm font-semibold">
+                    ${getCategoryName(product.category)}
                 </div>
             </div>
-            <div class="flex space-x-2">
-                <button onclick="editProduct(${JSON.stringify(product).replace(/"/g, '&quot;')})"
-                    class="text-yellow-500 hover:text-yellow-600 transition">
-                    <i class="fas fa-edit"></i>
-                </button>
-                <button onclick="deleteProduct(${product.id})"
-                    class="text-red-500 hover:text-red-600 transition">
-                    <i class="fas fa-trash"></i>
-                </button>
+            <div class="p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <h3 class="font-semibold text-lg">${product.name}</h3>
+                    <span class="text-yellow-500 font-bold">${product.price.toFixed(2)} TL</span>
+                </div>
+                <p class="text-gray-400 text-sm mb-6">${product.description}</p>
+                <div class="flex justify-end space-x-3">
+                    <button onclick="editProduct(${JSON.stringify(product).replace(/"/g, '&quot;')})"
+                        class="text-yellow-500 hover:text-yellow-600 transition p-2">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button onclick="deleteProduct(${product.id})"
+                        class="text-red-500 hover:text-red-600 transition p-2">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
             </div>
         </div>
     `).join('');
@@ -483,3 +490,4 @@ document.addEventListener('DOMContentLoaded', function() {
         form.addEventListener('submit', handleSubmit);
     }
 }); 
+ 
