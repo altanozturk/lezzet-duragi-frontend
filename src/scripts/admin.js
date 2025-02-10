@@ -110,7 +110,7 @@ function displayProducts(products) {
     }
 
     productList.innerHTML = products.map(product => `
-        <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl overflow-hidden shadow-xl border border-slate-700/50 transition duration-300 hover:transform hover:scale-[1.02]">
+        <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl overflow-hidden shadow-xl border border-slate-600/20 transition duration-300 hover:transform hover:scale-[1.02]">
             <div class="relative">
                 <img src="${product.imageUrl}" 
                      alt="${product.name}" 
