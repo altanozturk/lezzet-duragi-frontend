@@ -125,14 +125,16 @@ function displayProducts(products) {
                     <span class="text-yellow-500 font-bold">${product.price.toFixed(2)} TL</span>
                 </div>
                 <p class="text-gray-400 text-sm mb-6">${product.description}</p>
-                <div class="flex justify-end space-x-3">
+                <div class="flex justify-end space-x-4">
                     <button onclick="editProduct(${JSON.stringify(product).replace(/"/g, '&quot;')})"
-                        class="text-yellow-500 hover:text-yellow-600 transition p-2">
-                        <i class="fas fa-edit"></i>
+                        class="px-3 py-2 rounded-lg bg-slate-700/50 text-yellow-500 hover:bg-slate-700 transition duration-300">
+                        <i class="fas fa-edit mr-1"></i>
+                        <span class="text-sm">Düzenle</span>
                     </button>
                     <button onclick="deleteProduct(${product.id})"
-                        class="text-red-500 hover:text-red-600 transition p-2">
-                        <i class="fas fa-trash"></i>
+                        class="px-3 py-2 rounded-lg bg-slate-700/50 text-red-500 hover:bg-slate-700 transition duration-300">
+                        <i class="fas fa-trash mr-1"></i>
+                        <span class="text-sm">Sil</span>
                     </button>
                 </div>
             </div>
