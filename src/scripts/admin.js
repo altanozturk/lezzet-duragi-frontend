@@ -115,7 +115,7 @@ function displayProducts(products) {
                 <img src="${product.imageUrl}" 
                      alt="${product.name}" 
                      class="w-full h-48 object-cover">
-                <div class="absolute top-0 right-0 m-2 bg-yellow-500 text-white px-2 py-1 rounded-lg text-sm font-semibold">
+                <div class="absolute top-0 right-0 m-2 bg-yellow-500 text-white px-3 py-1.5 rounded-lg text-sm font-semibold">
                     ${getCategoryName(product.category)}
                 </div>
             </div>
